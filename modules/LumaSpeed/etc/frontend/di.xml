@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- PageCache's BuiltinPlugin stores the page in its own afterRenderResult (no sortOrder). After-plugins run in
+         ascending sortOrder, so this must sort below it, otherwise only the first, uncached visitor gets the optimised HTML. -->
+    <type name="Magento\Framework\Controller\ResultInterface">
+        <plugin name="softcode_lumaspeed_optimize_html" type="Softcode\LumaSpeed\Plugin\OptimizeHtmlPlugin" sortOrder="-100"/>
+    </type>
+</config>

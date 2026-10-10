@@ -1,0 +1,36 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.3']
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: bcmath, gd, intl, mbstring, pdo_mysql, soap, sockets, sodium, xsl, zip
+          coverage: none
+
+      - name: Lint
+        shell: bash  # -eo pipefail: a failing php -l fails the step; the grep only hides the "no errors" lines
+        run: find modules -name '*.php' -print0 | xargs -0 -n1 php -l | { grep -v '^No syntax errors' || true; }
+
+      - name: Cache Composer downloads
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/composer/files
+          key: composer-${{ matrix.php }}-${{ hashFiles('composer.json') }}
+
+      # magento/* packages come from the Mage-OS mirror (see composer.json), so no Adobe access keys are needed
+      - run: composer install --no-interaction --no-progress --prefer-dist
+
+      - run: vendor/bin/phpunit

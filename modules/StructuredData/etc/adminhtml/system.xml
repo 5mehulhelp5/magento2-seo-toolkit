@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="softcode" translate="label" sortOrder="400">
+            <label>Softcode</label>
+        </tab>
+        <section id="softcode_structureddata" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Structured Data</label>
+            <tab>softcode</tab>
+            <resource>Magento_Config::config</resource>
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>JSON-LD: Product and BreadcrumbList on product pages, BreadcrumbList on categories, Organization and WebSite (search box) on the homepage. Organization name comes from General > Store Information.</comment>
+                </field>
+            </group>
+            <group id="product" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Product</label>
+                <field id="brand_attribute" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Brand attribute code</label>
+                    <comment>Leave empty to omit the brand.</comment>
+                </field>
+                <field id="remove_microdata" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Remove Luma's product microdata</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Avoids describing the product twice (microdata + JSON-LD).</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

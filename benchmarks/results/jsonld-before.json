@@ -1,0 +1,33 @@
+[
+  {
+    "name": "home",
+    "path": "/",
+    "microdata": [],
+    "jsonld": []
+  },
+  {
+    "name": "category",
+    "path": "/gear/bags.html",
+    "microdata": [],
+    "jsonld": []
+  },
+  {
+    "name": "product-simple",
+    "path": "/joust-duffle-bag.html",
+    "microdata": [
+      "Product",
+      "AggregateRating",
+      "Offer"
+    ],
+    "jsonld": []
+  },
+  {
+    "name": "product-configurable",
+    "path": "/olivia-1-4-zip-light-jacket.html",
+    "microdata": [
+      "Product",
+      "Offer"
+    ],
+    "jsonld": []
+  }
+]

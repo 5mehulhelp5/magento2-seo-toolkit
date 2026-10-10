@@ -1,0 +1,12 @@
+[
+  { "name": "home", "path": "/" },
+  { "name": "category", "path": "/women/tops-women/jackets-women.html" },
+  { "name": "category-filtered", "path": "/women/tops-women/jackets-women.html?price=50-60" },
+  { "name": "category-page2", "path": "/gear/bags.html?p=2" },
+  { "name": "category-sorted", "path": "/gear/bags.html?product_list_order=price" },
+  { "name": "product", "path": "/joust-duffle-bag.html" },
+  { "name": "product-via-category", "path": "/gear/bags/joust-duffle-bag.html" },
+  { "name": "search", "path": "/catalogsearch/result/?q=jacket" },
+  { "name": "cms", "path": "/about-us" },
+  { "name": "404", "path": "/this-page-does-not-exist" }
+]

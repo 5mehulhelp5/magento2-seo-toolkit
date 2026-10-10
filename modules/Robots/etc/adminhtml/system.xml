@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="softcode" translate="label" sortOrder="400">
+            <label>Softcode</label>
+        </tab>
+        <section id="softcode_robots" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Robots</label>
+            <tab>softcode</tab>
+            <resource>Magento_Config::config</resource>
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Meta robots per page type</label>
+                <comment>robots.txt is Magento's own setting (Content > Design > Configuration > Search Engine Robots); this module only gives it a sensible default instead of an empty file.</comment>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="noindex_value" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Robots value for excluded pages</label>
+                </field>
+                <field id="noindex_actions" translate="label" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Excluded page types</label>
+                    <comment>One full action name prefix per line, e.g. checkout_ or catalogsearch_.</comment>
+                </field>
+                <field id="noindex_listing_params" translate="label" type="textarea" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Listing parameters that exclude a category page</label>
+                    <comment>Any active layered-navigation filter also excludes it. Pagination (p) does not.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,126 @@
+{
+  "checkedAt": "2026-10-10T22:20:52.324Z",
+  "rows": [
+    {
+      "name": "home",
+      "path": "/",
+      "status": 200,
+      "location": null,
+      "canonical": [],
+      "robots": "INDEX,FOLLOW"
+    },
+    {
+      "name": "cms",
+      "path": "/about-us",
+      "status": 200,
+      "location": null,
+      "canonical": [],
+      "robots": "INDEX,FOLLOW"
+    },
+    {
+      "name": "category",
+      "path": "/women/tops-women/jackets-women.html",
+      "status": 200,
+      "location": null,
+      "canonical": [],
+      "robots": "INDEX,FOLLOW"
+    },
+    {
+      "name": "category-filtered",
+      "path": "/women/tops-women/jackets-women.html?price=50-60",
+      "status": 200,
+      "location": null,
+      "canonical": [],
+      "robots": "INDEX,FOLLOW"
+    },
+    {
+      "name": "category-filtered-color",
+      "path": "/women/tops-women/jackets-women.html?color=50",
+      "status": 200,
+      "location": null,
+      "canonical": [],
+      "robots": "INDEX,FOLLOW"
+    },
+    {
+      "name": "category-page2",
+      "path": "/gear/bags.html?p=2",
+      "status": 200,
+      "location": null,
+      "canonical": [],
+      "robots": "INDEX,FOLLOW"
+    },
+    {
+      "name": "category-sorted",
+      "path": "/gear/bags.html?product_list_order=price",
+      "status": 200,
+      "location": null,
+      "canonical": [],
+      "robots": "INDEX,FOLLOW"
+    },
+    {
+      "name": "product",
+      "path": "/joust-duffle-bag.html",
+      "status": 200,
+      "location": null,
+      "canonical": [],
+      "robots": "INDEX,FOLLOW"
+    },
+    {
+      "name": "product-via-category",
+      "path": "/gear/bags/joust-duffle-bag.html",
+      "status": 200,
+      "location": null,
+      "canonical": [],
+      "robots": "INDEX,FOLLOW"
+    },
+    {
+      "name": "product-via-category-query",
+      "path": "/gear/bags/joust-duffle-bag.html?utm_source=test",
+      "status": 200,
+      "location": null,
+      "canonical": [],
+      "robots": "INDEX,FOLLOW"
+    },
+    {
+      "name": "search",
+      "path": "/catalogsearch/result/?q=jacket",
+      "status": 200,
+      "location": null,
+      "canonical": [],
+      "robots": "INDEX,FOLLOW"
+    },
+    {
+      "name": "account-login",
+      "path": "/customer/account/login/",
+      "status": 200,
+      "location": null,
+      "canonical": [],
+      "robots": "INDEX,FOLLOW"
+    },
+    {
+      "name": "cart",
+      "path": "/checkout/cart/",
+      "status": 200,
+      "location": null,
+      "canonical": [],
+      "robots": "INDEX,FOLLOW"
+    },
+    {
+      "name": "checkout",
+      "path": "/checkout/",
+      "status": 200,
+      "location": null,
+      "canonical": [],
+      "robots": "INDEX,FOLLOW"
+    },
+    {
+      "name": "404",
+      "path": "/this-page-does-not-exist",
+      "status": 404,
+      "location": null,
+      "canonical": [],
+      "robots": "INDEX,FOLLOW"
+    }
+  ],
+  "robotsTxt": ""
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <!-- after blocks are generated: layered navigation has applied its filters by then -->
+    <event name="layout_generate_blocks_after">
+        <observer name="softcode_robots" instance="Softcode\Robots\Observer\RobotsObserver"/>
+    </event>
+</config>

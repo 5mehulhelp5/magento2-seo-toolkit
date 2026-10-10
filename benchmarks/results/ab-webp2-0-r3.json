@@ -1,0 +1,66 @@
+{
+  "measuredAt": "2026-10-10T20:31:21.084Z",
+  "base": "https://magento-seo.test:8443",
+  "runsPerCell": 1,
+  "results": [
+    {
+      "name": "home",
+      "path": "/",
+      "tags": {
+        "status": 200,
+        "xRobotsTag": null,
+        "title": "Home Page",
+        "metaDescription": null,
+        "metaRobots": "INDEX,FOLLOW",
+        "canonical": [],
+        "hreflang": [],
+        "relPrevNext": [],
+        "h1Count": 1,
+        "jsonLdTypes": [],
+        "microdataTypes": [],
+        "imgMissingAlt": 0,
+        "htmlBytes": 83347
+      },
+      "mobile": {
+        "performance": 84,
+        "accessibility": 83,
+        "bestPractices": 92,
+        "seo": 75,
+        "lcp": 3407.092,
+        "cls": 0,
+        "tbt": 152.33000000000175,
+        "fcp": 2957.088,
+        "ttfb": 30.644000000000002,
+        "mainThread": 6580.810000000041,
+        "tti": 11562.157,
+        "totalBytes": 1104130,
+        "requests": 242,
+        "failedSeoAudits": [
+          "meta-description",
+          "crawlable-anchors",
+          "robots-txt",
+          "tap-targets"
+        ]
+      },
+      "desktop": {
+        "performance": 60,
+        "accessibility": 83,
+        "bestPractices": 92,
+        "seo": 82,
+        "lcp": 4192.348,
+        "cls": 0.0012759708534305822,
+        "tbt": 34.818999999999505,
+        "fcp": 4192.347,
+        "ttfb": 4014.6099999999997,
+        "mainThread": 1020.1659999999861,
+        "tti": 4660.704,
+        "totalBytes": 1086193,
+        "requests": 243,
+        "failedSeoAudits": [
+          "meta-description",
+          "crawlable-anchors"
+        ]
+      }
+    }
+  ]
+}

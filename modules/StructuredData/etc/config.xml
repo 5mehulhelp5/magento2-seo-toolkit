@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <softcode_structureddata>
+            <general>
+                <enabled>1</enabled>
+            </general>
+            <product>
+                <brand_attribute>manufacturer</brand_attribute>
+                <remove_microdata>1</remove_microdata>
+            </product>
+        </softcode_structureddata>
+    </default>
+</config>

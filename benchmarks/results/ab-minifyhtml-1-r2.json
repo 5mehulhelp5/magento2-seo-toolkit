@@ -1,0 +1,120 @@
+{
+  "measuredAt": "2026-10-10T20:23:06.040Z",
+  "base": "https://magento-seo.test:8443",
+  "runsPerCell": 1,
+  "results": [
+    {
+      "name": "cart",
+      "path": "/checkout/cart/",
+      "tags": {
+        "status": 200,
+        "xRobotsTag": null,
+        "title": "Shopping Cart",
+        "metaDescription": null,
+        "metaRobots": "INDEX,FOLLOW",
+        "canonical": [],
+        "hreflang": [],
+        "relPrevNext": [],
+        "h1Count": 1,
+        "jsonLdTypes": [],
+        "microdataTypes": [],
+        "imgMissingAlt": 0,
+        "htmlBytes": 186458
+      },
+      "mobile": {
+        "performance": 75,
+        "accessibility": 87,
+        "bestPractices": 92,
+        "seo": 83,
+        "lcp": 2722.089,
+        "cls": 0.07906737346252708,
+        "tbt": 480.12400000000207,
+        "fcp": 2338.752,
+        "ttfb": 237.54,
+        "mainThread": 9156.985000000117,
+        "tti": 14907.245,
+        "totalBytes": 770209,
+        "requests": 345,
+        "failedSeoAudits": [
+          "meta-description",
+          "crawlable-anchors",
+          "tap-targets"
+        ]
+      },
+      "desktop": {
+        "performance": 100,
+        "accessibility": 87,
+        "bestPractices": 92,
+        "seo": 82,
+        "lcp": 487.238,
+        "cls": 0.03077791103816858,
+        "tbt": 33.95199999618535,
+        "fcp": 420.553,
+        "ttfb": 233.28300000000002,
+        "mainThread": 1388.5959999999611,
+        "tti": 886.7789999961853,
+        "totalBytes": 735578,
+        "requests": 344,
+        "failedSeoAudits": [
+          "meta-description",
+          "crawlable-anchors"
+        ]
+      }
+    },
+    {
+      "name": "checkout",
+      "path": "/checkout/",
+      "tags": {
+        "status": 200,
+        "xRobotsTag": null,
+        "title": "Checkout",
+        "metaDescription": null,
+        "metaRobots": "INDEX,FOLLOW",
+        "canonical": [],
+        "hreflang": [],
+        "relPrevNext": [],
+        "h1Count": 1,
+        "jsonLdTypes": [],
+        "microdataTypes": [],
+        "imgMissingAlt": 0,
+        "htmlBytes": 605015
+      },
+      "mobile": {
+        "performance": 65,
+        "accessibility": 98,
+        "bestPractices": 83,
+        "seo": 92,
+        "lcp": 2488.301,
+        "cls": 0.21078410117685709,
+        "tbt": 427.1899999999973,
+        "fcp": 2188.263,
+        "ttfb": 223.041,
+        "mainThread": 10010.898000000163,
+        "tti": 15904.234,
+        "totalBytes": 773849,
+        "requests": 349,
+        "failedSeoAudits": [
+          "meta-description"
+        ]
+      },
+      "desktop": {
+        "performance": 79,
+        "accessibility": 97,
+        "bestPractices": 83,
+        "seo": 91,
+        "lcp": 437.837,
+        "cls": 0.44727222132551075,
+        "tbt": 0,
+        "fcp": 321.171,
+        "ttfb": 212.05,
+        "mainThread": 1675.307999999959,
+        "tti": 321.171,
+        "totalBytes": 755999,
+        "requests": 348,
+        "failedSeoAudits": [
+          "meta-description"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+[
+  { "name": "cart", "path": "/checkout/cart/" },
+  { "name": "checkout", "path": "/checkout/" }
+]

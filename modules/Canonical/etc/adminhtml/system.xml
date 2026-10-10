@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="softcode" translate="label" sortOrder="400">
+            <label>Softcode</label>
+        </tab>
+        <section id="softcode_canonical" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Canonical URLs</label>
+            <tab>softcode</tab>
+            <resource>Magento_Config::config</resource>
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <comment>Category and product canonical tags themselves are Magento's own settings (Catalog > Search Engine Optimization); this module turns them on by default and fills the gaps below.</comment>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Adds canonicals to the homepage and CMS pages, and self-referencing canonicals to listing page 2+.</comment>
+                </field>
+                <field id="redirect_category_product_urls" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>301-redirect category-path product URLs</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Only applies while "Use Categories Path for Product URLs" is No.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

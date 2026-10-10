@@ -1,0 +1,178 @@
+{
+  "measuredAt": "2026-10-10T20:01:01.529Z",
+  "base": "https://magento-seo.test:8443",
+  "runsPerCell": 1,
+  "results": [
+    {
+      "name": "category",
+      "path": "/women/tops-women/jackets-women.html",
+      "tags": {
+        "status": 200,
+        "xRobotsTag": null,
+        "title": "Jackets - Tops - Women",
+        "metaDescription": null,
+        "metaRobots": "INDEX,FOLLOW",
+        "canonical": [],
+        "hreflang": [],
+        "relPrevNext": [],
+        "h1Count": 1,
+        "jsonLdTypes": [],
+        "microdataTypes": [],
+        "imgMissingAlt": 0,
+        "htmlBytes": 193362
+      },
+      "mobile": {
+        "performance": 93,
+        "accessibility": 83,
+        "bestPractices": 92,
+        "seo": 83,
+        "lcp": 2300.021,
+        "cls": 0.03393206958107737,
+        "tbt": 181.19600000000173,
+        "fcp": 2300.021,
+        "ttfb": 31.613,
+        "mainThread": 7014.649000000037,
+        "tti": 11155.591,
+        "totalBytes": 747246,
+        "requests": 248,
+        "failedSeoAudits": [
+          "meta-description",
+          "crawlable-anchors",
+          "tap-targets"
+        ]
+      },
+      "desktop": {
+        "performance": 97,
+        "accessibility": 83,
+        "bestPractices": 92,
+        "seo": 82,
+        "lcp": 351.695,
+        "cls": 0.10849883385965964,
+        "tbt": 34.16599999999994,
+        "fcp": 351.695,
+        "ttfb": 32.675,
+        "mainThread": 1311.3809999999826,
+        "tti": 856.635,
+        "totalBytes": 712491,
+        "requests": 247,
+        "failedSeoAudits": [
+          "meta-description",
+          "crawlable-anchors"
+        ]
+      }
+    },
+    {
+      "name": "cart",
+      "path": "/checkout/cart/",
+      "tags": {
+        "status": 200,
+        "xRobotsTag": null,
+        "title": "Shopping Cart",
+        "metaDescription": null,
+        "metaRobots": "INDEX,FOLLOW",
+        "canonical": [],
+        "hreflang": [],
+        "relPrevNext": [],
+        "h1Count": 1,
+        "jsonLdTypes": [],
+        "microdataTypes": [],
+        "imgMissingAlt": 0,
+        "htmlBytes": 186416
+      },
+      "mobile": {
+        "performance": 72,
+        "accessibility": 87,
+        "bestPractices": 92,
+        "seo": 83,
+        "lcp": 2423.762,
+        "cls": 0.08939238570686711,
+        "tbt": 693.1299999999997,
+        "fcp": 2123.737,
+        "ttfb": 328.385,
+        "mainThread": 10197.651000000124,
+        "tti": 15131.259,
+        "totalBytes": 735947,
+        "requests": 344,
+        "failedSeoAudits": [
+          "meta-description",
+          "crawlable-anchors",
+          "tap-targets"
+        ]
+      },
+      "desktop": {
+        "performance": 100,
+        "accessibility": 87,
+        "bestPractices": 92,
+        "seo": 82,
+        "lcp": 600.173,
+        "cls": 0.02783900294366682,
+        "tbt": 35.610999999999876,
+        "fcp": 550.172,
+        "ttfb": 311.333,
+        "mainThread": 1893.326999999962,
+        "tti": 1143.0590000038146,
+        "totalBytes": 735948,
+        "requests": 344,
+        "failedSeoAudits": [
+          "meta-description",
+          "crawlable-anchors"
+        ]
+      }
+    },
+    {
+      "name": "checkout",
+      "path": "/checkout/",
+      "tags": {
+        "status": 200,
+        "xRobotsTag": null,
+        "title": "Checkout",
+        "metaDescription": null,
+        "metaRobots": "INDEX,FOLLOW",
+        "canonical": [],
+        "hreflang": [],
+        "relPrevNext": [],
+        "h1Count": 1,
+        "jsonLdTypes": [],
+        "microdataTypes": [],
+        "imgMissingAlt": 0,
+        "htmlBytes": 604986
+      },
+      "mobile": {
+        "performance": 43,
+        "accessibility": 98,
+        "bestPractices": 83,
+        "seo": 92,
+        "lcp": 2652.519,
+        "cls": 0.2246023131951751,
+        "tbt": 3178.197000000005,
+        "fcp": 2435.892,
+        "ttfb": 362.359,
+        "mainThread": 17676.022000000157,
+        "tti": 21844.611,
+        "totalBytes": 773847,
+        "requests": 349,
+        "failedSeoAudits": [
+          "meta-description"
+        ]
+      },
+      "desktop": {
+        "performance": 69,
+        "accessibility": 97,
+        "bestPractices": 83,
+        "seo": 91,
+        "lcp": 1249.057,
+        "cls": 0.4077958963455869,
+        "tbt": 0,
+        "fcp": 1149.024,
+        "ttfb": 836.7529999999999,
+        "mainThread": 2597.998999999952,
+        "tti": 1149.024,
+        "totalBytes": 755953,
+        "requests": 348,
+        "failedSeoAudits": [
+          "meta-description"
+        ]
+      }
+    }
+  ]
+}

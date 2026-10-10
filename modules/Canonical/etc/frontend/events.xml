@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="layout_generate_blocks_after">
+        <observer name="softcode_canonical" instance="Softcode\Canonical\Observer\CanonicalObserver"/>
+    </event>
+    <event name="controller_action_predispatch_catalog_product_view">
+        <observer name="softcode_canonical_category_path_redirect" instance="Softcode\Canonical\Observer\ProductCategoryPathRedirect"/>
+    </event>
+</config>

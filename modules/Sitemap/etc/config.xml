@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <!-- Magento's sitemap itself is sound (measured: 200, indexable, self-canonical URLs, images included);
+             it is just switched off. These turn on its daily cron generation and the "Sitemap:" line in
+             robots.txt. Values saved under Stores > Configuration > Catalog > XML Sitemap still win. -->
+        <sitemap>
+            <generate>
+                <enabled>1</enabled>
+            </generate>
+            <search_engines>
+                <submission_robots>1</submission_robots>
+            </search_engines>
+        </sitemap>
+    </default>
+</config>

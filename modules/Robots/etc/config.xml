@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <!-- Vanilla Magento serves an empty robots.txt: it ships a template (default_custom_instructions)
+             but leaves the actual value empty. A value saved under Content > Design > Configuration still wins.
+             Search, cart, checkout and account pages are not worth crawling; filter and sort URLs stay
+             crawlable on purpose so search engines can see their NOINDEX tag. -->
+        <design>
+            <search_engine_robots>
+                <custom_instructions><![CDATA[User-agent: *
+Disallow: /checkout/
+Disallow: /customer/
+Disallow: /catalogsearch/
+Disallow: /wishlist/
+Disallow: /sendfriend/
+Disallow: /catalog/product_compare/
+Disallow: /review/product/
+Disallow: /*SID=
+]]></custom_instructions>
+            </search_engine_robots>
+        </design>
+        <softcode_robots>
+            <general>
+                <enabled>1</enabled>
+                <noindex_value>NOINDEX,FOLLOW</noindex_value>
+                <noindex_actions>catalogsearch_
+checkout_
+customer_
+wishlist_
+catalog_product_compare_
+sendfriend_
+multishipping_
+review_product_list
+cms_noroute_index</noindex_actions>
+                <noindex_listing_params>product_list_order
+product_list_dir
+product_list_limit
+product_list_mode</noindex_listing_params>
+            </general>
+        </softcode_robots>
+    </default>
+</config>

@@ -1,0 +1,1 @@
+{ "private": true, "type": "module", "dependencies": { "lighthouse": "10.4.0" } }

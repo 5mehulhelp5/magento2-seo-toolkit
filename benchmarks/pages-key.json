@@ -1,0 +1,7 @@
+[
+  { "name": "home", "path": "/" },
+  { "name": "category", "path": "/women/tops-women/jackets-women.html" },
+  { "name": "product", "path": "/joust-duffle-bag.html" },
+  { "name": "cart", "path": "/checkout/cart/" },
+  { "name": "checkout", "path": "/checkout/" }
+]

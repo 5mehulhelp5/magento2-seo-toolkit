@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <softcode_lumaspeed>
+            <general>
+                <enabled>1</enabled>
+            </general>
+            <images>
+                <prioritize_lcp>1</prioritize_lcp>
+                <eager_listing_count>4</eager_listing_count>
+                <lazy_content>1</lazy_content>
+                <eager_content_count>3</eager_content_count>
+                <responsive_content>1</responsive_content>
+                <responsive_widths>480,768,1280,1920</responsive_widths>
+            </images>
+            <css>
+                <!-- no extension, so it also matches mage/calendar.min.css when CSS minification is on -->
+                <defer_stylesheets>mage/calendar.</defer_stylesheets>
+            </css>
+            <fonts>
+                <trim_preloads>1</trim_preloads>
+                <keep_preloads>opensans-400.woff2
+Luma-Icons.woff2</keep_preloads>
+            </fonts>
+        </softcode_lumaspeed>
+    </default>
+</config>

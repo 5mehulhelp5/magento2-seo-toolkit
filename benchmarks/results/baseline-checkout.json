@@ -1,0 +1,112 @@
+{
+  "measuredAt": "2026-10-10T13:30:08.707Z",
+  "base": "https://magento-seo.test:8443",
+  "runsPerCell": 3,
+  "results": [
+    {
+      "name": "cart",
+      "path": "/checkout/cart/",
+      "tags": {
+        "status": 200,
+        "xRobotsTag": null,
+        "title": "Shopping Cart",
+        "metaDescription": null,
+        "metaRobots": "INDEX,FOLLOW",
+        "canonical": [],
+        "hreflang": [],
+        "relPrevNext": [],
+        "h1Count": 1,
+        "jsonLdTypes": [],
+        "microdataTypes": [],
+        "imgMissingAlt": 0,
+        "htmlBytes": 200345
+      },
+      "mobile": {
+        "performance": 99,
+        "accessibility": 100,
+        "bestPractices": 92,
+        "seo": 83,
+        "lcp": 1974.275,
+        "cls": 0,
+        "tbt": 1.5,
+        "fcp": 1405.6923000000002,
+        "ttfb": 241.07100000000003,
+        "totalBytes": 648678,
+        "requests": 126,
+        "failedSeoAudits": [
+          "meta-description",
+          "crawlable-anchors",
+          "tap-targets"
+        ]
+      },
+      "desktop": {
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 92,
+        "seo": 82,
+        "lcp": 422.568,
+        "cls": 0,
+        "tbt": 0,
+        "fcp": 335.568,
+        "ttfb": 218.751,
+        "totalBytes": 648673,
+        "requests": 126,
+        "failedSeoAudits": [
+          "meta-description",
+          "crawlable-anchors"
+        ]
+      }
+    },
+    {
+      "name": "checkout",
+      "path": "/checkout/",
+      "tags": {
+        "status": 200,
+        "xRobotsTag": null,
+        "title": "Checkout",
+        "metaDescription": null,
+        "metaRobots": "INDEX,FOLLOW",
+        "canonical": [],
+        "hreflang": [],
+        "relPrevNext": [],
+        "h1Count": 1,
+        "jsonLdTypes": [],
+        "microdataTypes": [],
+        "imgMissingAlt": 0,
+        "htmlBytes": 606341
+      },
+      "mobile": {
+        "performance": 96,
+        "accessibility": 100,
+        "bestPractices": 83,
+        "seo": 92,
+        "lcp": 2552.8307,
+        "cls": 0,
+        "tbt": 10,
+        "fcp": 1874.8307,
+        "ttfb": 199.876,
+        "totalBytes": 718570,
+        "requests": 123,
+        "failedSeoAudits": [
+          "meta-description"
+        ]
+      },
+      "desktop": {
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 92,
+        "seo": 91,
+        "lcp": 522.662,
+        "cls": 0,
+        "tbt": 0,
+        "fcp": 458.6429,
+        "ttfb": 216.134,
+        "totalBytes": 718569,
+        "requests": 123,
+        "failedSeoAudits": [
+          "meta-description"
+        ]
+      }
+    }
+  ]
+}

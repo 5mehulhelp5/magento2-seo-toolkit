@@ -1,0 +1,297 @@
+{
+  "measuredAt": "2026-10-10T18:59:39.783Z",
+  "base": "https://magento-seo.test:8443",
+  "runsPerCell": 1,
+  "results": [
+    {
+      "name": "home",
+      "path": "/",
+      "tags": {
+        "status": 200,
+        "xRobotsTag": null,
+        "title": "Home Page",
+        "metaDescription": null,
+        "metaRobots": "INDEX,FOLLOW",
+        "canonical": [],
+        "hreflang": [],
+        "relPrevNext": [],
+        "h1Count": 1,
+        "jsonLdTypes": [],
+        "microdataTypes": [],
+        "imgMissingAlt": 0,
+        "htmlBytes": 83389
+      },
+      "mobile": {
+        "performance": 72,
+        "accessibility": 83,
+        "bestPractices": 92,
+        "seo": 83,
+        "lcp": 4930.546,
+        "cls": 0,
+        "tbt": 150.52499999999736,
+        "fcp": 3663.843,
+        "ttfb": 34.233,
+        "mainThread": 5556.20100000001,
+        "tti": 12096.238000003814,
+        "totalBytes": 1088237,
+        "requests": 240,
+        "failedSeoAudits": [
+          "meta-description",
+          "crawlable-anchors",
+          "tap-targets"
+        ]
+      },
+      "desktop": {
+        "performance": 100,
+        "accessibility": 83,
+        "bestPractices": 92,
+        "seo": 82,
+        "lcp": 248.646,
+        "cls": 0.0006324171793386405,
+        "tbt": 35.355999999999995,
+        "fcp": 248.646,
+        "ttfb": 40.837999999999994,
+        "mainThread": 1032.8329999999874,
+        "tti": 663.127,
+        "totalBytes": 1086114,
+        "requests": 243,
+        "failedSeoAudits": [
+          "meta-description",
+          "crawlable-anchors"
+        ]
+      }
+    },
+    {
+      "name": "category",
+      "path": "/women/tops-women/jackets-women.html",
+      "tags": {
+        "status": 200,
+        "xRobotsTag": null,
+        "title": "Jackets - Tops - Women",
+        "metaDescription": null,
+        "metaRobots": "INDEX,FOLLOW",
+        "canonical": [],
+        "hreflang": [],
+        "relPrevNext": [],
+        "h1Count": 1,
+        "jsonLdTypes": [],
+        "microdataTypes": [],
+        "imgMissingAlt": 0,
+        "htmlBytes": 193665
+      },
+      "mobile": {
+        "performance": 81,
+        "accessibility": 83,
+        "bestPractices": 92,
+        "seo": 83,
+        "lcp": 3841.009,
+        "cls": 0.04537793847498098,
+        "tbt": 188.8510000000001,
+        "fcp": 2640.983,
+        "ttfb": 38.119,
+        "mainThread": 5867.87700000001,
+        "tti": 10744.932,
+        "totalBytes": 712394,
+        "requests": 247,
+        "failedSeoAudits": [
+          "meta-description",
+          "crawlable-anchors",
+          "tap-targets"
+        ]
+      },
+      "desktop": {
+        "performance": 97,
+        "accessibility": 83,
+        "bestPractices": 92,
+        "seo": 82,
+        "lcp": 337.494,
+        "cls": 0.10748012875669696,
+        "tbt": 34.226,
+        "fcp": 337.494,
+        "ttfb": 32.672,
+        "mainThread": 1189.4009999999857,
+        "tti": 789.575,
+        "totalBytes": 712394,
+        "requests": 247,
+        "failedSeoAudits": [
+          "meta-description",
+          "crawlable-anchors"
+        ]
+      }
+    },
+    {
+      "name": "product",
+      "path": "/joust-duffle-bag.html",
+      "tags": {
+        "status": 200,
+        "xRobotsTag": null,
+        "title": "Joust Duffle Bag",
+        "metaDescription": "The sporty Joust Duffle Bag can&#039;t be beat - not in the gym, not on the luggage carousel, not anywhere. Big enough to haul a basketball or soccer ball and some sneakers with plenty of room to spare, it&#039;s ideal for athletes with places to go.\n\nDual top hand",
+        "metaRobots": "INDEX,FOLLOW",
+        "canonical": [],
+        "hreflang": [],
+        "relPrevNext": [],
+        "h1Count": 1,
+        "jsonLdTypes": [],
+        "microdataTypes": [
+          "Product",
+          "AggregateRating",
+          "Offer"
+        ],
+        "imgMissingAlt": 0,
+        "htmlBytes": 73967
+      },
+      "mobile": {
+        "performance": 86,
+        "accessibility": 86,
+        "bestPractices": 92,
+        "seo": 92,
+        "lcp": 2848.592,
+        "cls": 0,
+        "tbt": 229.47899999999754,
+        "fcp": 2848.592,
+        "ttfb": 28.424,
+        "mainThread": 5637.540000000038,
+        "tti": 11140.292,
+        "totalBytes": 724721,
+        "requests": 265,
+        "failedSeoAudits": [
+          "crawlable-anchors"
+        ]
+      },
+      "desktop": {
+        "performance": 100,
+        "accessibility": 86,
+        "bestPractices": 92,
+        "seo": 91,
+        "lcp": 210.392,
+        "cls": 0.010548207953660602,
+        "tbt": 35.91999999999996,
+        "fcp": 210.392,
+        "ttfb": 29.836,
+        "mainThread": 1109.1389999999863,
+        "tti": 636.288,
+        "totalBytes": 724721,
+        "requests": 265,
+        "failedSeoAudits": [
+          "crawlable-anchors"
+        ]
+      }
+    },
+    {
+      "name": "cart",
+      "path": "/checkout/cart/",
+      "tags": {
+        "status": 200,
+        "xRobotsTag": null,
+        "title": "Shopping Cart",
+        "metaDescription": null,
+        "metaRobots": "INDEX,FOLLOW",
+        "canonical": [],
+        "hreflang": [],
+        "relPrevNext": [],
+        "h1Count": 1,
+        "jsonLdTypes": [],
+        "microdataTypes": [],
+        "imgMissingAlt": 0,
+        "htmlBytes": 186803
+      },
+      "mobile": {
+        "performance": 78,
+        "accessibility": 87,
+        "bestPractices": 92,
+        "seo": 76,
+        "lcp": 2871.642,
+        "cls": 0.08939238570686711,
+        "tbt": 315.62399999999934,
+        "fcp": 2538.377,
+        "ttfb": 254.041,
+        "mainThread": 7389.1670000001195,
+        "tti": 14572.825,
+        "totalBytes": 735582,
+        "requests": 344,
+        "failedSeoAudits": [
+          "meta-description",
+          "crawlable-anchors",
+          "robots-txt",
+          "tap-targets"
+        ]
+      },
+      "desktop": {
+        "performance": 77,
+        "accessibility": 87,
+        "bestPractices": 92,
+        "seo": 73,
+        "lcp": 4314.435,
+        "cls": 0.0215944210306087,
+        "tbt": 35.15300000000025,
+        "fcp": 447.768,
+        "ttfb": 283.124,
+        "mainThread": 1455.9589999999728,
+        "tti": 4410.733,
+        "totalBytes": 735580,
+        "requests": 344,
+        "failedSeoAudits": [
+          "meta-description",
+          "crawlable-anchors",
+          "robots-txt"
+        ]
+      }
+    },
+    {
+      "name": "checkout",
+      "path": "/checkout/",
+      "tags": {
+        "status": 200,
+        "xRobotsTag": null,
+        "title": "Checkout",
+        "metaDescription": null,
+        "metaRobots": "INDEX,FOLLOW",
+        "canonical": [],
+        "hreflang": [],
+        "relPrevNext": [],
+        "h1Count": 1,
+        "jsonLdTypes": [],
+        "microdataTypes": [],
+        "imgMissingAlt": 0,
+        "htmlBytes": 605360
+      },
+      "mobile": {
+        "performance": 56.99999999999999,
+        "accessibility": 98,
+        "bestPractices": 83,
+        "seo": 92,
+        "lcp": 2825.695,
+        "cls": 0.3390518642995867,
+        "tbt": 356.79599999618495,
+        "fcp": 2475.687,
+        "ttfb": 192.863,
+        "mainThread": 9093.151000000122,
+        "tti": 16396.140999996187,
+        "totalBytes": 773913,
+        "requests": 349,
+        "failedSeoAudits": [
+          "meta-description"
+        ]
+      },
+      "desktop": {
+        "performance": 78,
+        "accessibility": 97,
+        "bestPractices": 83,
+        "seo": 91,
+        "lcp": 451.994,
+        "cls": 0.44676977845711047,
+        "tbt": 0,
+        "fcp": 385.317,
+        "ttfb": 213.833,
+        "mainThread": 1741.4209999999573,
+        "tti": 385.317,
+        "totalBytes": 773910,
+        "requests": 349,
+        "failedSeoAudits": [
+          "meta-description"
+        ]
+      }
+    }
+  ]
+}

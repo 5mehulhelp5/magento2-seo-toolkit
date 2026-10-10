@@ -1,0 +1,188 @@
+[
+  {
+    "name": "home",
+    "path": "/",
+    "microdata": [],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Main Website Store",
+        "url": "https://magento-seo.test:8443/",
+        "logo": "https://magento-seo.test:8443/static/version1791656232/frontend/Magento/luma/en_US/images/logo.svg"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Main Website Store",
+        "url": "https://magento-seo.test:8443/",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://magento-seo.test:8443/catalogsearch/result/?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      }
+    ]
+  },
+  {
+    "name": "category",
+    "path": "/gear/bags.html",
+    "microdata": [],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://magento-seo.test:8443/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Gear",
+            "item": "https://magento-seo.test:8443/gear.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Bags",
+            "item": "https://magento-seo.test:8443/gear/bags.html"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "product-simple",
+    "path": "/joust-duffle-bag.html",
+    "microdata": [],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "Joust Duffle Bag",
+        "url": "https://magento-seo.test:8443/joust-duffle-bag.html",
+        "sku": "24-MB01",
+        "description": "The sporty Joust Duffle Bag can't be beat - not in the gym, not on the luggage carousel, not anywhere. Big enough to haul a basketball or soccer ball and some sneakers with plenty of room to spare, it's ideal for athletes with places to go. Dual top handles. Adjustable shoulder strap. Full-length zipper. L 29\" x W 13\" x H 11\".",
+        "image": [
+          "https://magento-seo.test:8443/media/catalog/product/m/b/mb01-blue-0.jpg"
+        ],
+        "offers": {
+          "@type": "Offer",
+          "price": "34.00",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "itemCondition": "https://schema.org/NewCondition",
+          "url": "https://magento-seo.test:8443/joust-duffle-bag.html"
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": 2.5,
+          "bestRating": 5,
+          "worstRating": 1,
+          "reviewCount": 2
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://magento-seo.test:8443/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Gear",
+            "item": "https://magento-seo.test:8443/gear.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Bags",
+            "item": "https://magento-seo.test:8443/gear/bags.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "name": "Joust Duffle Bag",
+            "item": "https://magento-seo.test:8443/joust-duffle-bag.html"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "product-configurable",
+    "path": "/olivia-1-4-zip-light-jacket.html",
+    "microdata": [],
+    "jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "Olivia 1/4 Zip Light Jacket",
+        "url": "https://magento-seo.test:8443/olivia-1-4-zip-light-jacket.html",
+        "sku": "WJ12",
+        "description": "Running errands or headed to the gym, you just want to be comfortable. The Olivia Light Jacket promises that, plus a laid-back look. This zip-up is designed with shoulder stripes for an athletic touch, and banded waist and contoured seams for a flattering silhouette. • Loose fit. • Reflectivity. • Flat seams. • Machine wash/dry.",
+        "image": [
+          "https://magento-seo.test:8443/media/catalog/product/w/j/wj12-blue_main_1.jpg",
+          "https://magento-seo.test:8443/media/catalog/product/w/j/wj12-blue_alt1_1.jpg",
+          "https://magento-seo.test:8443/media/catalog/product/w/j/wj12-blue_back_1.jpg"
+        ],
+        "offers": {
+          "@type": "Offer",
+          "price": "77.00",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "itemCondition": "https://schema.org/NewCondition",
+          "url": "https://magento-seo.test:8443/olivia-1-4-zip-light-jacket.html"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://magento-seo.test:8443/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Women",
+            "item": "https://magento-seo.test:8443/women.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Tops",
+            "item": "https://magento-seo.test:8443/women/tops-women.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "name": "Jackets",
+            "item": "https://magento-seo.test:8443/women/tops-women/jackets-women.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 5,
+            "name": "Olivia 1/4 Zip Light Jacket",
+            "item": "https://magento-seo.test:8443/olivia-1-4-zip-light-jacket.html"
+          }
+        ]
+      }
+    ]
+  }
+]

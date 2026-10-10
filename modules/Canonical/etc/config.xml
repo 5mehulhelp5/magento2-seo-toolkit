@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <!-- Magento ships its own catalog canonical tags switched off; this module turns them on by default.
+             Values saved in the admin still win. -->
+        <catalog>
+            <seo>
+                <category_canonical_tag>1</category_canonical_tag>
+                <product_canonical_tag>1</product_canonical_tag>
+            </seo>
+        </catalog>
+        <softcode_canonical>
+            <general>
+                <enabled>1</enabled>
+                <redirect_category_product_urls>1</redirect_category_product_urls>
+            </general>
+        </softcode_canonical>
+    </default>
+</config>

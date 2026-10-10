@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="softcode" translate="label" sortOrder="400">
+            <label>Softcode</label>
+        </tab>
+        <section id="softcode_lumaspeed" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Luma Speed</label>
+            <tab>softcode</tab>
+            <resource>Magento_Config::config</resource>
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Flush the full page cache after changing these settings.</comment>
+                </field>
+            </group>
+            <group id="images" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Images</label>
+                <field id="prioritize_lcp" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Prioritise the LCP image</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Preloads the PDP main photo, the first listing image or the first CMS image with fetchpriority="high".</comment>
+                </field>
+                <field id="eager_listing_count" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product images loaded eagerly on listings</label>
+                    <validate>validate-digits</validate>
+                    <comment>Luma lazy-loads every listing image, including the first row on screen.</comment>
+                </field>
+                <field id="lazy_content" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Lazy-load CMS images further down the page</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="eager_content_count" translate="label" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>CMS images loaded eagerly</label>
+                    <validate>validate-digits</validate>
+                    <comment>The first image is the prioritised hero; this many images in total are never lazy-loaded, because on phones the promo tiles under the hero are usually on screen.</comment>
+                    <depends><field id="lazy_content">1</field></depends>
+                </field>
+                <field id="responsive_content" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Responsive WebP for CMS images</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Creates WebP copies at the widths below in pub/media/softcode/rsz and adds srcset, so phones don't download full-size banners. Needs PHP GD with WebP.</comment>
+                </field>
+                <field id="responsive_widths" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>WebP widths</label>
+                    <comment>Comma-separated pixel widths. Widths above the original are skipped.</comment>
+                    <depends><field id="responsive_content">1</field></depends>
+                </field>
+            </group>
+            <group id="css" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>CSS</label>
+                <field id="defer_stylesheets" translate="label" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Load these stylesheets without blocking render</label>
+                    <comment>One path fragment per line, e.g. mage/calendar. (only needed by date pickers; matches the .min.css too).</comment>
+                </field>
+            </group>
+            <group id="fonts" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Fonts</label>
+                <field id="trim_preloads" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Only preload essential fonts</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="keep_preloads" translate="label" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Fonts to keep preloading</label>
+                    <comment>One file name per line. Other fonts still load, just not ahead of the LCP image.</comment>
+                    <depends><field id="trim_preloads">1</field></depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Softcode_Canonical">
+        <!-- after Magento_Catalog so the catalog/seo defaults in etc/config.xml override Magento's -->
+        <sequence>
+            <module name="Magento_Catalog"/>
+            <module name="Magento_Cms"/>
+        </sequence>
+    </module>
+</config>
