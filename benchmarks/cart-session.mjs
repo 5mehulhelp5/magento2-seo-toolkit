@@ -2,15 +2,15 @@
 // Usage: node cart-session.mjs [/product-url.html]
 import https from 'node:https';
 
-const HOST = 'magento-seo.test';
+const BASE = new URL(process.env.STORE_URL || 'https://magento-seo.test:8443'), HOST = BASE.hostname;
 const productPath = process.argv[2] || '/joust-duffle-bag.html';
 const jar = {};
 
 function request(method, path, body) {
-  const headers = { Host: `${HOST}:8443`, Cookie: Object.entries(jar).map(([k, v]) => `${k}=${v}`).join('; ') };
+  const headers = { Host: BASE.host, Cookie: Object.entries(jar).map(([k, v]) => `${k}=${v}`).join('; ') };
   if (body) Object.assign(headers, { 'Content-Type': 'application/x-www-form-urlencoded', 'Content-Length': Buffer.byteLength(body) });
   return new Promise((resolve, reject) => {
-    const req = https.request({ method, host: '127.0.0.1', port: 8443, path, servername: HOST, headers, rejectUnauthorized: false }, res => {
+    const req = https.request({ method, host: process.env.RESOLVE_IP || '127.0.0.1', port: BASE.port || 443, path, servername: HOST, headers, rejectUnauthorized: false }, res => {
       for (const c of res.headers['set-cookie'] || []) {
         const [kv] = c.split(';'); const i = kv.indexOf('=');
         jar[kv.slice(0, i)] = kv.slice(i + 1);

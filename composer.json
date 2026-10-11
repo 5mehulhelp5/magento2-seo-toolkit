@@ -31,7 +31,8 @@
             "Softcode\\Canonical\\": "modules/Canonical/",
             "Softcode\\Robots\\": "modules/Robots/",
             "Softcode\\StructuredData\\": "modules/StructuredData/",
-            "Softcode\\Sitemap\\": "modules/Sitemap/"
+            "Softcode\\Sitemap\\": "modules/Sitemap/",
+            "Softcode\\Meta\\": "modules/Meta/"
         }
     },
     "config": {

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <softcode_meta>
+            <description>
+                <enabled>1</enabled>
+                <category_template>Shop {{name}} at {{store}}.</category_template>
+                <home_template>Shop {{store}} online: {{categories}}.</home_template>
+                <generic_template>{{title}} | {{store}}</generic_template>
+            </description>
+        </softcode_meta>
+    </default>
+</config>

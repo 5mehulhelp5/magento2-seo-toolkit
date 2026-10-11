@@ -9,9 +9,10 @@ fs.mkdirSync(out, { recursive: true });
 // Parse cost comes from real code volume; execution cost from a timed busy loop.
 function script(name, kb, workMs, body) {
   const filler = [];
+  const id = name.replace(/\W/g, '_');   // "tag-manager" is not a valid JS identifier; it made the whole file a SyntaxError
   let i = 0;
   while (filler.join('').length < kb * 1024) {
-    filler.push(`function _${name}_${i}(a,b){var c=[a,b,${i}];for(var j=0;j<c.length;j++){c[j]=String(c[j]).split('').reverse().join('')}return c.join('|')}\n`);
+    filler.push(`function _${id}_${i}(a,b){var c=[a,b,${i}];for(var j=0;j<c.length;j++){c[j]=String(c[j]).split('').reverse().join('')}return c.join('|')}\n`);
     i++;
   }
   const work = `(function(){var t=performance.now();while(performance.now()-t<${workMs}){Math.sqrt(Math.random())}})();\n`;

@@ -28,6 +28,18 @@
                     <comment>Any active layered-navigation filter also excludes it. Pagination (p) does not.</comment>
                 </field>
             </group>
+            <group id="llms" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>llms.txt</label>
+                <comment>A markdown map of the shop for AI agents at /llms.txt (llmstxt.org). Generated from store name, default description, menu categories, CMS pages and the XML sitemap.</comment>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Serve /llms.txt</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="custom" translate="label" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Custom content</label>
+                    <comment>Replaces the generated file when filled in.</comment>
+                </field>
+            </group>
         </section>
     </system>
 </config>

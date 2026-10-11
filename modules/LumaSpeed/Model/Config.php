@@ -32,7 +32,25 @@ class Config
             'eagerContentImages' => (int)$this->value('images/eager_content_count'),
             'deferStylesheets' => $this->lines('css/defer_stylesheets'),
             'keepFontPreloads' => $this->flag('fonts/trim_preloads') ? $this->lines('fonts/keep_preloads') : null,
+            'menuAria' => $this->flag('a11y/menu_aria'),
+            'inlineStylesheets' => $this->lines('css/inline_stylesheets'),
+            'extraCss' => $this->value('css/extra_css'),
         ];
+    }
+
+    public function useUsedCss(): bool
+    {
+        return $this->flag('css/used_css');
+    }
+
+    public function useJsBundles(): bool
+    {
+        return $this->flag('js/bundles');
+    }
+
+    public function sizeImages(): bool
+    {
+        return $this->flag('images/size_images');
     }
 
     /**

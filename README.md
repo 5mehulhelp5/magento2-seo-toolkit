@@ -12,11 +12,30 @@ Every fix is measured: a before/after run on a real vanilla store, not a claim.
 
 | Module | What it fixes | Status |
 |---|---|---|
-| `Softcode_LumaSpeed` | LCP image is fetched late (lazy-loaded first listing row, low-priority PDP photo, unprioritised CMS hero); full-size CMS images on phones; `calendar.css` blocks render on every page; 5 font preloads compete with the LCP image | 0.2, measured |
+| `Softcode_LumaSpeed` | LCP image is fetched late (lazy-loaded first listing row, low-priority PDP photo, unprioritised CMS hero); full-size CMS images on phones; images without width/height; `calendar.css` blocks render on every page; 5 font preloads compete with the LCP image; layered navigation jumps on load (CLS); menu and tab ARIA roles; low-contrast swatches and colour-only breadcrumb links. Optional: per-page-type "used CSS" | 0.3, measured |
 | `Softcode_Canonical` | no canonical tags at all by default; no canonical on home/CMS even when enabled; page 2+ canonicalised to page 1; category-path product URLs serve duplicates with a 200 | 0.1, verified |
-| `Softcode_Robots` | one global `INDEX,FOLLOW` on every page incl. filters, sorting, search, cart, checkout, account, 404; empty `robots.txt` | 0.1, verified |
+| `Softcode_Robots` | one global `INDEX,FOLLOW` on every page incl. filters, sorting, search, cart, checkout, account, 404; empty `robots.txt`; no `/llms.txt` | 0.2, verified |
 | `Softcode_StructuredData` | no JSON-LD anywhere; PDP has Luma microdata only; no breadcrumbs, organization or site search markup | 0.1, verified |
 | `Softcode_Sitemap` | no sitemap exists until one is created in the admin; daily generation off; robots.txt doesn't reference it | 0.1, verified |
+| `Softcode_Meta` | no meta description on the homepage, CMS pages, categories, search, cart unless typed in by hand | 0.1, verified |
+
+### Lighthouse 13.5 (the version PageSpeed Insights runs), 2026-10-11
+
+Local runs with PageSpeed's own settings (simulated Moto G Power / desktop), warm cache, all modules on:
+
+| Page | SEO | Best practices | Accessibility | Performance desktop | Performance mobile |
+|---|---|---|---|---|---|
+| Home, PLP, PDP, CMS | 100 | 100 | 100 | 100 | ~80 (61-83, see below) |
+
+Before the toolkit: SEO 92, best practices 92-96, accessibility 85-88, desktop 97-100.
+
+Mobile performance is held back by JavaScript: ~600-800 ms total blocking time, from ~2.2 s (simulated) of Luma's RequireJS modules plus ~0.9 s of typical third-party scripts (tag manager, analytics, consent, chat; local stand-ins). The per-run spread (61-83) is machine noise in when that JavaScript delays the LCP paint. That is the open work item.
+
+Measured and **not** worth it (kept as options, off by default):
+- inlining Luma's full stylesheet: FCP unchanged, the 52 KB just moves into every HTML page;
+- RequireJS bundles (`tools/luma-speed/bundle-*.mjs`): 200+ script requests down to 10-14 and everything works, but bigger evaluation tasks raised total blocking time (PDP 729 -> 883 ms) and PLP desktop CLS.
+
+Measured and kept: per-page-type **used CSS** (`tools/luma-speed/usedcss-build.mjs`, setting *Inline used CSS per page type*): only 42-65 KB of Luma's 449 KB of render-blocking CSS is used per page type; inlining that and loading the rest without blocking improved FCP in every A/B round (mobile ~1.53 -> ~1.36 s, desktop 362 -> 322 ms). Verified pixel-identical against the original, also with the full stylesheets blocked. Rebuild after every static content deploy.
 
 ### Sitemap
 
@@ -105,19 +124,33 @@ Early versions. The modules are verified on one store: 2.4.6-p15 with Luma sampl
 Each module works on its own; install only the ones you need. Either copy them into `app/code`:
 
 ```bash
-mkdir -p app/code/Softcode && cp -r modules/LumaSpeed modules/Canonical modules/Robots modules/StructuredData modules/Sitemap app/code/Softcode/
+mkdir -p app/code/Softcode && cp -r modules/LumaSpeed modules/Canonical modules/Robots modules/StructuredData modules/Sitemap modules/Meta app/code/Softcode/
 ```
 
 or add this repository's `modules/*` as a Composer path repository and `composer require softcode/module-luma-speed softcode/module-canonical ...`. Then:
 
 ```bash
-bin/magento module:enable Softcode_LumaSpeed Softcode_Canonical Softcode_Robots Softcode_StructuredData Softcode_Sitemap
+bin/magento module:enable Softcode_LumaSpeed Softcode_Canonical Softcode_Robots Softcode_StructuredData Softcode_Sitemap Softcode_Meta
 bin/magento setup:upgrade
-bin/magento setup:di:compile   # production mode
+bin/magento setup:di:compile                                   # production mode
+bin/magento setup:static-content:deploy -f                     # production mode: LumaSpeed ships a RequireJS mixin
 bin/magento cache:flush
 ```
 
 Settings live under **Stores > Configuration > Softcode**.
+
+### Optional: used CSS per page type
+
+Needs Node 22+ and Chrome on a machine that can reach the store:
+
+```bash
+cd tools/luma-speed && npm install
+STORE_URL=https://your-store.example node usedcss-build.mjs   # writes usedcss/*.json
+# copy usedcss/ to pub/static/frontend/<Vendor>/<theme>/<locale>/Softcode_LumaSpeed/usedcss/
+# then enable Stores > Configuration > Softcode > Luma Speed > CSS > Inline used CSS per page type
+```
+
+Rebuild and copy again after every `setup:static-content:deploy` (which empties `pub/static`). Without the files the setting changes nothing. Check the result visually: `benchmarks/lh13/screens.mjs` with `BLOCK_FULL_CSS=1` shows the first render with only the used CSS.
 
 ## Tests
 

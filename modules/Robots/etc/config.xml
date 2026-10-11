@@ -38,6 +38,10 @@ product_list_dir
 product_list_limit
 product_list_mode</noindex_listing_params>
             </general>
+            <llms>
+                <enabled>1</enabled>
+                <custom></custom>
+            </llms>
         </softcode_robots>
     </default>
 </config>

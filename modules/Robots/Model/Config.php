@@ -36,6 +36,16 @@ class Config
         return $this->lines('noindex_listing_params');
     }
 
+    public function isLlmsTxtEnabled(): bool
+    {
+        return $this->scopeConfig->isSetFlag('softcode_robots/llms/enabled', ScopeInterface::SCOPE_STORE);
+    }
+
+    public function getLlmsTxtCustom(): string
+    {
+        return (string)$this->scopeConfig->getValue('softcode_robots/llms/custom', ScopeInterface::SCOPE_STORE);
+    }
+
     /** @return string[] */
     private function lines(string $field): array
     {

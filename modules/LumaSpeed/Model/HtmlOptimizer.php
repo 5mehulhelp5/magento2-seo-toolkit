@@ -22,8 +22,17 @@ class HtmlOptimizer
      *     eagerContentImages?: int,
      *     responsiveContentImages?: callable(string): ?array{srcset: string, width: int},
      *     deferStylesheets?: string[],
-     *     keepFontPreloads?: string[]|null
-     * } $options  responsiveContentImages maps an image URL to its srcset and original width (or null to leave it alone)
+     *     keepFontPreloads?: string[]|null,
+     *     menuAria?: bool,
+     *     dimensionsFor?: callable(string): ?array{0: int, 1: int},
+     *     inlineStylesheets?: string[],
+     *     cssFor?: callable(string): ?string,
+     *     extraCss?: string,
+     *     requireBundles?: array{prefix: string, pageTypes: array<string, string>, bundles: array<string, string[]>}|null,
+     *     usedCss?: array{pageTypes: array<string, string>, cssFor: callable(string): ?string, defer: string[]}|null
+     * } $options  usedCss: per page type, inline the CSS that type uses and load the full stylesheets without blocking  responsiveContentImages maps an image URL to its srcset and original width (or null to leave it alone);
+     *             dimensionsFor maps an image URL to its natural [width, height]; cssFor returns a stylesheet's contents
+     *             with relative url()s already made absolute
      */
     public function optimize(string $html, array $options): string
     {
@@ -53,10 +62,156 @@ class HtmlOptimizer
         foreach ($options['deferStylesheets'] ?? [] as $needle) {
             $html = $this->deferStylesheet($html, $needle);
         }
+        if (!empty($options['usedCss'])) {
+            $html = $this->applyUsedCss($html, $options['usedCss'], $bodyClasses);
+        }
         if (isset($options['keepFontPreloads'])) {
             $html = $this->trimFontPreloads($html, $options['keepFontPreloads']);
         }
+        if ($options['menuAria'] ?? false) {
+            $html = $this->fixMenuAria($html);
+        }
+        if (isset($options['dimensionsFor'])) {
+            $html = $this->sizeImages($html, $options['dimensionsFor']);
+        }
+        if (!empty($options['inlineStylesheets']) && isset($options['cssFor'])) {
+            $html = $this->inlineStylesheets($html, $options['inlineStylesheets'], $options['cssFor']);
+        }
+        if (!empty($options['requireBundles'])) {
+            $html = $this->addRequireBundles($html, $options['requireBundles'], $bodyClasses);
+        }
+        if (trim((string)($options['extraCss'] ?? '')) !== '') {
+            $html = $this->insertBeforeHeadEnd($html, '<style data-softcode-lumaspeed>' . $this->safeCss($options['extraCss']) . '</style>');
+        }
         return $html;
+    }
+
+    /**
+     * jQuery UI turns the top-menu <ul>s into role="menu" and their links into role="menuitem", but leaves the
+     * <li>s in between without a role. Screen readers (and Lighthouse: aria-required-children/-parent, listitem)
+     * then see a menu with no items and list items outside a list. role="none" removes the <li>s from the tree.
+     */
+    private function fixMenuAria(string $html): string
+    {
+        return preg_replace_callback(
+            '/<nav\b[^>]*\bclass="[^"]*\bnavigation\b[^"]*"[^>]*>.*?<\/nav>/is',
+            fn (array $nav) => preg_replace_callback(
+                '/<li\b[^>]*>/i',
+                fn (array $li) => $this->attr($li[0], 'role') === null ? substr($li[0], 0, 3) . ' role="none"' . substr($li[0], 3) : $li[0],
+                $nav[0]
+            ),
+            $html
+        );
+    }
+
+    /**
+     * Images without width/height can't reserve space before they load (layout shift, Lighthouse unsized-images).
+     * Adds the natural size, or the missing one of the two in proportion. Luma's CSS (img {max-width: 100%;
+     * height: auto}) keeps the rendered size; the attributes only give the browser the aspect ratio up front.
+     */
+    private function sizeImages(string $html, callable $dimensionsFor): string
+    {
+        return preg_replace_callback(
+            '/<img\b[^>]*>/i',
+            function (array $m) use ($dimensionsFor): string {
+                $tag = $m[0];
+                $width = $this->attr($tag, 'width');
+                $height = $this->attr($tag, 'height');
+                $src = $this->attr($tag, 'src');
+                if (($width !== null && $height !== null) || $src === null || str_starts_with($src, 'data:')) {
+                    return $tag;
+                }
+                $natural = $dimensionsFor(html_entity_decode($src));
+                if (!$natural || $natural[0] <= 0 || $natural[1] <= 0) {
+                    return $tag;
+                }
+                if ($width !== null && is_numeric($width)) {
+                    $add = sprintf(' height="%d"', (int)round((float)$width * $natural[1] / $natural[0]));
+                } elseif ($height !== null && is_numeric($height)) {
+                    $add = sprintf(' width="%d"', (int)round((float)$height * $natural[0] / $natural[1]));
+                } else {
+                    $add = sprintf(' width="%d" height="%d"', $natural[0], $natural[1]);
+                }
+                return substr($tag, 0, 4) . $add . substr($tag, 4);
+            },
+            $html
+        );
+    }
+
+    /**
+     * Replaces <link rel="stylesheet"> tags matching one of the patterns with an inline <style>, so the first
+     * render doesn't wait for a separate CSS request. Keeps the link's media query.
+     * @param string[] $patterns
+     */
+    private function inlineStylesheets(string $html, array $patterns, callable $cssFor): string
+    {
+        return preg_replace_callback(
+            '/<link\b[^>]*\brel="stylesheet"[^>]*>/i',
+            function (array $m) use ($patterns, $cssFor): string {
+                $tag = $m[0];
+                $href = html_entity_decode((string)$this->attr($tag, 'href'));
+                $media = $this->attr($tag, 'media');
+                if ($href === '' || $media === 'print') {
+                    return $tag;   // print-only and deferred (media="print" onload) stylesheets don't block render
+                }
+                foreach ($patterns as $pattern) {
+                    if ($pattern !== '' && str_contains($href, $pattern)) {
+                        $css = $cssFor($href);
+                        if ($css === null) {
+                            return $tag;
+                        }
+                        $mediaAttr = $media !== null && $media !== 'all' ? sprintf(' media="%s"', $media) : '';
+                        return sprintf('<style data-href="%s"%s>%s</style>', htmlspecialchars($href, ENT_QUOTES), $mediaAttr, $this->safeCss($css));
+                    }
+                }
+                return $tag;
+            },
+            $html
+        );
+    }
+
+    /**
+     * Luma loads 200+ RequireJS modules one file at a time, many only discovered after their parent arrived
+     * (request chains). RequireJS's own "bundles" config maps module ids to a bundle file, so the first request for
+     * any of them fetches the whole bundle once. Inserted right after require.js: requirejs-config.js starts
+     * loading its deps as soon as it runs, so the bundle map has to be known before that.
+     * @param array{prefix: string, pageTypes: array<string, string>, bundles: array<string, string[]>} $manifest
+     * @param string[] $bodyClasses
+     */
+    private function addRequireBundles(string $html, array $manifest, array $bodyClasses): string
+    {
+        $config = [];
+        if (!empty($manifest['bundles']['common'])) {
+            $config[$manifest['prefix'] . 'common'] = $manifest['bundles']['common'];
+        }
+        foreach ($manifest['pageTypes'] ?? [] as $bodyClass => $type) {
+            if (in_array($bodyClass, $bodyClasses, true) && !empty($manifest['bundles'][$type])) {
+                $config[$manifest['prefix'] . $type] = $manifest['bundles'][$type];
+                break;
+            }
+        }
+        if (!$config) {
+            return $html;
+        }
+        $json = str_replace('</', '<\/', (string)json_encode(['bundles' => $config], JSON_UNESCAPED_SLASHES));
+        return (string)preg_replace_callback(
+            '#<script\b[^>]*\bsrc="[^"]*/requirejs/require(?:\.min)?\.js"[^>]*>\s*</script>#i',
+            fn (array $m) => $m[0] . "\n<script>require.config(" . $json . ');</script>',
+            $html,
+            1
+        );
+    }
+
+    /** CSS can't contain "</style" inside a <style> element; it only appears in comments or strings, so escape it. */
+    private function safeCss(string $css): string
+    {
+        return preg_replace('#</(style)#i', '<\\\\/$1', $css);
+    }
+
+    private function insertBeforeHeadEnd(string $html, string $snippet): string
+    {
+        $at = stripos($html, '</head>');
+        return $at === false ? $html : substr($html, 0, $at) . $snippet . "\n" . substr($html, $at);
     }
 
     /** @return string[] */
@@ -197,15 +352,47 @@ class HtmlOptimizer
             '/<link\b[^>]*\brel="stylesheet"[^>]*>/i',
             function (array $m) use ($needle): string {
                 $tag = $m[0];
-                if (strpos((string)$this->attr($tag, 'href'), $needle) === false) {
-                    return $tag;
+                $media = $this->attr($tag, 'media') ?? 'all';
+                if (strpos((string)$this->attr($tag, 'href'), $needle) === false || $media === 'print') {
+                    return $tag;   // print stylesheets (and already-deferred ones) never block render
                 }
+                // restore the stylesheet's own media query once loaded: styles-l is "screen and (min-width: 768px)",
+                // switching it to "all" would apply desktop layout on phones
+                $restore = htmlspecialchars(addslashes(html_entity_decode($media)), ENT_QUOTES);
                 $deferred = $this->removeAttr($this->removeAttr($tag, 'media'), 'onload');
-                $deferred = substr($deferred, 0, 5) . ' media="print" onload="this.media=\'all\'"' . substr($deferred, 5);
+                $deferred = substr($deferred, 0, 5) . ' media="print" onload="this.media=\'' . $restore . '\'"' . substr($deferred, 5);
                 return $deferred . '<noscript>' . $tag . '</noscript>';
             },
             $html
         );
+    }
+
+    /**
+     * Luma's render-blocking CSS is ~440 KB raw, of which a page uses a fraction. With a "used CSS" file for this
+     * page type, that subset goes inline where the first stylesheet was (keeping cascade order) and the full
+     * stylesheets load without blocking the first render.
+     * @param array{pageTypes: array<string, string>, cssFor: callable(string): ?string, defer: string[]} $usedCss
+     * @param string[] $bodyClasses
+     */
+    private function applyUsedCss(string $html, array $usedCss, array $bodyClasses): string
+    {
+        $type = null;
+        foreach ($usedCss['pageTypes'] as $bodyClass => $pageType) {
+            if (in_array($bodyClass, $bodyClasses, true)) {
+                $type = $pageType;
+                break;
+            }
+        }
+        $css = $type === null ? null : ($usedCss['cssFor'])($type);
+        if ($css === null || $css === '' || !preg_match('/<link\b[^>]*\brel="stylesheet"[^>]*>/i', $html, $first, PREG_OFFSET_CAPTURE)) {
+            return $html;
+        }
+        $style = '<style data-softcode-used-css="' . htmlspecialchars($type, ENT_QUOTES) . '">' . $this->safeCss($css) . '</style>';
+        $html = substr($html, 0, $first[0][1]) . $style . substr($html, $first[0][1]);
+        foreach ($usedCss['defer'] as $needle) {
+            $html = $this->deferStylesheet($html, $needle);
+        }
+        return $html;
     }
 
     /** Luma preloads five font files; they compete with the LCP image for bandwidth. */

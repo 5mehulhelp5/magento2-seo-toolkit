@@ -8,6 +8,8 @@
         "magento/framework": "^103.0",
         "magento/module-catalog": "*",
         "magento/module-robots": "*",
+        "magento/module-cms": "*",
+        "magento/module-sitemap": "*",
         "magento/module-store": "*"
     },
     "autoload": {

@@ -13,11 +13,30 @@
                 <eager_content_count>3</eager_content_count>
                 <responsive_content>1</responsive_content>
                 <responsive_widths>480,768,1280,1920</responsive_widths>
+                <size_images>1</size_images>
             </images>
             <css>
                 <!-- no extension, so it also matches mage/calendar.min.css when CSS minification is on -->
                 <defer_stylesheets>mage/calendar.</defer_stylesheets>
+                <!-- off by default: Luma's styles-m.min.css is 363 KB (52 KB gzipped), so inlining it adds that to
+                     every page and loses CSS caching between pages; worth it only where measured -->
+                <inline_stylesheets></inline_stylesheets>
+                <!-- needs used-CSS files built for the deployed theme (see README); without them this changes nothing -->
+                <used_css>0</used_css>
+                <!-- 1. Luma's size swatches: #949494 on #f0f0f0 is a 2.66:1 contrast ratio; #666 gives 5.0:1 (WCAG AA 4.5:1)
+                     2. Layered navigation: the server renders every filter open and the accordion JS then collapses
+                        them (a layout shift of several hundred px on desktop PLPs); keep them closed until JS opens one
+                     3. Breadcrumb links (#006bb4) next to the current page (#707070) differ only by colour (1.12:1);
+                        an underline makes them recognisable as links (WCAG 1.4.1, Lighthouse link-in-text-block) -->
+                <extra_css>.swatch-attribute.size .swatch-option,.swatch-attribute.manufacturer .swatch-option{color:#666}#narrow-by-list .filter-options-item:not(.active)>.filter-options-content{display:none}.breadcrumbs a{text-decoration:underline}</extra_css>
             </css>
+            <a11y>
+                <menu_aria>1</menu_aria>
+            </a11y>
+            <js>
+                <!-- needs bundles built for the deployed theme (see README); without them this changes nothing -->
+                <bundles>0</bundles>
+            </js>
             <fonts>
                 <trim_preloads>1</trim_preloads>
                 <keep_preloads>opensans-400.woff2

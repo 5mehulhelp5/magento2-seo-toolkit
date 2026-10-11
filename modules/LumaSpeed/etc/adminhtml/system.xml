@@ -49,12 +49,46 @@
                     <comment>Comma-separated pixel widths. Widths above the original are skipped.</comment>
                     <depends><field id="responsive_content">1</field></depends>
                 </field>
+                <field id="size_images" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Add missing image width/height</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Read from the image file (pub/media, pub/static; SVG via width/height or viewBox), so the browser reserves space before the image loads.</comment>
+                </field>
             </group>
             <group id="css" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>CSS</label>
                 <field id="defer_stylesheets" translate="label" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Load these stylesheets without blocking render</label>
                     <comment>One path fragment per line, e.g. mage/calendar. (only needed by date pickers; matches the .min.css too).</comment>
+                </field>
+                <field id="inline_stylesheets" translate="label" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Inline these stylesheets</label>
+                    <comment>One path fragment per line. Their contents go into the page as a style element, removing a render-blocking request; relative url()s are rewritten. Each page gets bigger by the stylesheet's size, so keep this to what every page needs first.</comment>
+                </field>
+                <field id="used_css" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Inline used CSS per page type</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Inlines only the CSS rules each page type uses and loads the full stylesheets without blocking. Needs used-CSS files built for the deployed theme (usedcss/ in its static folder); rebuild after every static content deploy. Without them nothing changes.</comment>
+                </field>
+                <field id="extra_css" translate="label" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Extra inline CSS</label>
+                    <comment>Small corrections added to the head without an extra request.</comment>
+                </field>
+            </group>
+            <group id="js" translate="label" sortOrder="33" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>JavaScript</label>
+                <field id="bundles" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Use RequireJS bundles</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Loads Luma's modules from a few per-page-type bundles instead of 200+ separate files. Needs bundles built for the deployed theme (bundle/manifest.json in its static folder); rebuild after every static content deploy. Without them nothing changes.</comment>
+                </field>
+            </group>
+            <group id="a11y" translate="label" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Accessibility</label>
+                <field id="menu_aria" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Fix top menu ARIA roles</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Adds role="none" to the menu's list items, which jQuery UI leaves between role="menu" and role="menuitem".</comment>
                 </field>
             </group>
             <group id="fonts" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">

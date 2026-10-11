@@ -109,6 +109,29 @@ class HtmlOptimizerTest extends TestCase
         $this->assertStringContainsString('<noscript>' . $link . '</noscript>', $out);
     }
 
+    public function testDeferredStylesheetGetsItsOwnMediaQueryBack(): void
+    {
+        $link = '<link  rel="stylesheet" type="text/css"  media="screen and (min-width: 768px)" href="/static/css/styles-l.min.css" />';
+        $out = $this->optimizer->optimize($this->page('cms-page-view', '', $link), ['deferStylesheets' => ['css/styles-l']]);
+
+        $this->assertStringContainsString('media="print" onload="this.media=\'screen and (min-width: 768px)\'"', $out);
+    }
+
+    public function testUsedCssIsInlinedBeforeTheFirstStylesheetWhichThenLoadsWithoutBlocking(): void
+    {
+        $head = '<link  rel="stylesheet" type="text/css"  media="all" href="/static/css/styles-m.min.css" />'
+            . '<link  rel="stylesheet" type="text/css"  media="screen and (min-width: 768px)" href="/static/css/styles-l.min.css" />';
+        $usedCss = ['pageTypes' => ['catalog-category-view' => 'plp'], 'cssFor' => fn (string $t) => $t === 'plp' ? '.a{b:c}' : null, 'defer' => ['css/styles-']];
+        $out = $this->optimizer->optimize($this->page('catalog-category-view', '', $head), ['usedCss' => $usedCss, 'prioritizeLcpImage' => false]);
+
+        $this->assertStringContainsString('<style data-softcode-used-css="plp">.a{b:c}</style><link media="print" onload="this.media=\'all\'"', $out);
+        $this->assertStringContainsString('onload="this.media=\'screen and (min-width: 768px)\'"', $out);
+
+        $other = $this->optimizer->optimize($this->page('cms-page-view', '', $head), ['usedCss' => $usedCss, 'prioritizeLcpImage' => false]);
+        $this->assertStringNotContainsString('data-softcode-used-css', $other, 'page types without used CSS keep blocking stylesheets');
+        $this->assertStringNotContainsString('media="print"', $other);
+    }
+
     public function testDeferMatchesMinifiedStylesheet(): void
     {
         $link = '<link  rel="stylesheet" type="text/css"  media="all" href="/static/mage/calendar.min.css" />';
@@ -126,6 +149,64 @@ class HtmlOptimizerTest extends TestCase
         $this->assertStringNotContainsString('opensans-300', $out);
         $this->assertStringContainsString('opensans-400', $out);
         $this->assertStringContainsString('Luma-Icons', $out);
+    }
+
+    public function testMenuListItemsGetRoleNoneOnlyInsideNavigation(): void
+    {
+        $nav = '<nav class="navigation" data-action="navigation"><ul><li class="level0 nav-1"><a href="/a">A</a></li>'
+            . '<li class="level0" role="presentation"><a href="/b">B</a></li></ul></nav>';
+        $html = str_replace('<main', $nav . '<main', $this->page('cms-page-view', '<ul><li>content list</li></ul>'));
+        $out = $this->optimizer->optimize($html, ['menuAria' => true]);
+
+        $this->assertStringContainsString('<li role="none" class="level0 nav-1">', $out);
+        $this->assertStringContainsString('<li class="level0" role="presentation">', $out, 'existing roles are kept');
+        $this->assertStringContainsString('<ul><li>content list</li></ul>', $out, 'lists outside the menu are untouched');
+    }
+
+    public function testMissingImageDimensionsAreAddedInProportion(): void
+    {
+        $html = $this->page('cms-page-view', '<img src="/logo.svg" width="170" alt=""><img src="/photo.jpg"><img src="/sized.jpg" width="10" height="10"><img src="data:image/gif;base64,R0lG">');
+        $dims = fn (string $url) => ['/logo.svg' => [189, 64], '/photo.jpg' => [800, 600], '/sized.jpg' => [1, 1]][$url] ?? null;
+        $out = $this->optimizer->optimize($html, ['dimensionsFor' => $dims, 'prioritizeLcpImage' => false]);
+
+        $this->assertStringContainsString('<img height="58" src="/logo.svg" width="170"', $out);
+        $this->assertStringContainsString('<img width="800" height="600" src="/photo.jpg">', $out);
+        $this->assertStringContainsString('<img src="/sized.jpg" width="10" height="10">', $out);
+        $this->assertStringContainsString('<img src="data:image/gif;base64,R0lG">', $out);
+    }
+
+    public function testMatchingStylesheetIsInlinedWithItsMediaQuery(): void
+    {
+        $head = '<link  rel="stylesheet" type="text/css"  media="all" href="https://shop.test/static/version1/css/styles-m.min.css" />'
+            . '<link  rel="stylesheet" type="text/css"  media="screen and (min-width: 768px)" href="https://shop.test/static/version1/css/styles-l.min.css" />'
+            . '<link  rel="stylesheet" type="text/css"  media="print" href="https://shop.test/static/version1/css/print.min.css" />';
+        $css = fn (string $url) => str_contains($url, 'styles-l') ? 'b{c:d}' : 'a{content:"</style>"}';
+        $out = $this->optimizer->optimize($this->page('cms-page-view', '', $head), ['inlineStylesheets' => ['css/styles-'], 'cssFor' => $css]);
+
+        $this->assertStringContainsString('<style data-href="https://shop.test/static/version1/css/styles-m.min.css">a{content:"<\/style>"}</style>', $out);
+        $this->assertStringContainsString('media="screen and (min-width: 768px)">b{c:d}</style>', $out);
+        $this->assertStringContainsString('print.min.css', $out, 'print stylesheets never block render, so they stay links');
+        $this->assertStringNotContainsString('styles-m.min.css" />', $out);
+    }
+
+    public function testExtraCssIsAddedToTheHead(): void
+    {
+        $out = $this->optimizer->optimize($this->page('cms-page-view', ''), ['extraCss' => '.swatch-option.text{color:#666}']);
+
+        $this->assertStringContainsString('<style data-softcode-lumaspeed>.swatch-option.text{color:#666}</style>' . "\n</head>", $out);
+    }
+
+    public function testRequireBundlesConfigGoesRightAfterRequireJsForThePageType(): void
+    {
+        $head = '<script  type="text/javascript"  src="https://shop.test/static/v1/requirejs/require.min.js"></script>'
+            . '<script  type="text/javascript"  src="https://shop.test/static/v1/requirejs-config.min.js"></script>';
+        $manifest = ['prefix' => 'Softcode_LumaSpeed/bundle/', 'pageTypes' => ['catalog-product-view' => 'pdp', 'cms-index-index' => 'home'],
+            'bundles' => ['common' => ['jquery', 'text!Magento_Ui/t.html'], 'pdp' => ['Magento_Catalog/js/gallery'], 'home' => ['x']]];
+        $out = $this->optimizer->optimize($this->page('catalog-product-view', '', $head), ['requireBundles' => $manifest, 'prioritizeLcpImage' => false]);
+
+        $config = '<script>require.config({"bundles":{"Softcode_LumaSpeed/bundle/common":["jquery","text!Magento_Ui/t.html"],'
+            . '"Softcode_LumaSpeed/bundle/pdp":["Magento_Catalog/js/gallery"]}});</script>';
+        $this->assertStringContainsString('require.min.js"></script>' . "\n" . $config . '<script  type="text/javascript"  src="https://shop.test/static/v1/requirejs-config.min.js">', $out);
     }
 
     public function testNonHtmlResponsesAreUntouched(): void

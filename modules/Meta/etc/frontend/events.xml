@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <!-- right before rendering: controllers (e.g. the cart) set their page title after the layout is generated -->
+    <event name="layout_render_before">
+        <observer name="softcode_meta_description_fallback" instance="Softcode\Meta\Observer\MetaDescriptionFallback"/>
+    </event>
+</config>
