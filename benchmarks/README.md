@@ -31,3 +31,5 @@ Everything used to produce the numbers in the main README: a vanilla store, the 
 | `store-setup/make-3p.mjs`, `apply.sh` | "realistic" store: 2560px hero and local stand-ins for tag manager, analytics, consent banner and chat |
 | `store-setup/native-config.sh` | Magento's own frontend settings (minify, move JS, critical CSS) |
 | `store-setup/*-module*.sh`, `verify-*.sh` | install the toolkit modules into the store and check their output |
+| `store-setup/create-da-store.php` | second store view `da` (Danish, da_DK) on `https://da.magento-seo.test:8443/` for the hreflang test. nginx must pass the store code per host: `set $run_code default; if ($host = "da.magento-seo.test") { set $run_code da; }` at server level and `fastcgi_param MAGE_RUN_CODE $run_code; fastcgi_param MAGE_RUN_TYPE store;` in the PHP location |
+| `lh13/hreflang-lh.mjs` | Lighthouse SEO, `hreflang` and `canonical` audits on every store host |

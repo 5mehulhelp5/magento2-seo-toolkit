@@ -18,6 +18,7 @@ Every fix is measured: a before/after run on a real vanilla store, not a claim.
 | `Softcode_StructuredData` | no JSON-LD anywhere; PDP has Luma microdata only; no breadcrumbs, organization or site search markup | 0.1, verified |
 | `Softcode_Sitemap` | no sitemap exists until one is created in the admin; daily generation off; robots.txt doesn't reference it | 0.1, verified |
 | `Softcode_Meta` | no meta description on the homepage, CMS pages, categories, search, cart unless typed in by hand | 0.1, verified |
+| `Softcode_Hreflang` | no hreflang: store views in other languages look like duplicate content | 0.1, verified |
 
 ### Lighthouse 13.5 (the version PageSpeed Insights runs), 2026-10-11
 
@@ -52,7 +53,29 @@ Magento's own sitemap is sound once it exists: on the test store it lists 221 UR
 
 Known Magento behaviour: the `Sitemap:` URL in robots.txt drops a non-standard port (`Sitemap::_getStoreBaseDomain()` uses scheme + host only). Irrelevant on port 443, visible on dev setups like `:8443`.
 
-Not covered yet: hreflang alternates for multi-language stores.
+Sitemap alternates (`xhtml:link` in the sitemap) are not generated; `Softcode_Hreflang` puts them in the page head instead, which Google treats the same.
+
+### hreflang
+
+Vanilla Magento has no hreflang at all: a shop with an English and a Danish store view shows Google two unrelated copies of every product. `Softcode_Hreflang` links the same page across store views:
+
+```html
+<link rel="alternate" hreflang="en-US" href="https://shop.example/joust-duffle-bag.html">
+<link rel="alternate" hreflang="da-DK" href="https://da.shop.example/joust-sportstaske.html">
+<link rel="alternate" hreflang="x-default" href="https://shop.example/joust-duffle-bag.html">
+```
+
+- homepage, CMS pages, categories (page 2+ keeps `?p=N`, matching its canonical) and products;
+- each store view's own URL (its own URL key and suffix, from Magento's URL rewrites), the same URL the canonical uses;
+- a store view where the page doesn't exist is left out: product disabled, not visible or not in that website; category inactive or outside that root category; CMS page not assigned. A page that exists in one store view only gets no hreflang;
+- self reference and reciprocal links (every store view outputs the same set); `x-default` = the website's default store view, configurable;
+- the value comes from each store view's locale (`da_DK` -> `da-DK`, or language only), with a per-store-view override (`es-419`, `en-GB`);
+- store views of all websites (one website per country) or only the current website;
+- filtered/sorted listings, search, cart, checkout and account get none (they are NOINDEX).
+
+Verified on the test store with a second store view `da` (da_DK) on its own host: reciprocal links on all page types; a Danish URL key, a product disabled in Danish and an English-only CMS page each handled as above. Lighthouse 13.5 `hreflang` and `canonical` audits pass and SEO is 100 on home, PLP, PLP page 2, PDP and CMS on both hosts (`benchmarks/lh13/hreflang-lh.mjs`).
+
+Limitation: CMS pages are matched by identifier. Store-specific pages with different identifiers per language (`about-us` / `om-os`) are not linked.
 
 ### SEO check, vanilla vs. with Canonical + Robots
 
@@ -133,13 +156,13 @@ Early versions. The modules are verified on one store: 2.4.6-p15 with Luma sampl
 Each module works on its own; install only the ones you need. Either copy them into `app/code`:
 
 ```bash
-mkdir -p app/code/Softcode && cp -r modules/LumaSpeed modules/Canonical modules/Robots modules/StructuredData modules/Sitemap modules/Meta app/code/Softcode/
+mkdir -p app/code/Softcode && cp -r modules/LumaSpeed modules/Canonical modules/Robots modules/StructuredData modules/Sitemap modules/Meta modules/Hreflang app/code/Softcode/
 ```
 
 or add this repository's `modules/*` as a Composer path repository and `composer require softcode/module-luma-speed softcode/module-canonical ...`. Then:
 
 ```bash
-bin/magento module:enable Softcode_LumaSpeed Softcode_Canonical Softcode_Robots Softcode_StructuredData Softcode_Sitemap Softcode_Meta
+bin/magento module:enable Softcode_LumaSpeed Softcode_Canonical Softcode_Robots Softcode_StructuredData Softcode_Sitemap Softcode_Meta Softcode_Hreflang
 bin/magento setup:upgrade
 bin/magento setup:di:compile                                   # production mode
 bin/magento setup:static-content:deploy -f                     # production mode: LumaSpeed ships a RequireJS mixin

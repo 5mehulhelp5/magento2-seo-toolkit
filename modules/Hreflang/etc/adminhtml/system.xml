@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="softcode" translate="label" sortOrder="400">
+            <label>Softcode</label>
+        </tab>
+        <section id="softcode_hreflang" translate="label" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>hreflang</label>
+            <tab>softcode</tab>
+            <resource>Magento_Config::config</resource>
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <comment>Links the same product, category, CMS page and homepage across store views. A page only links to store views where it exists and is enabled. Nothing is output on a shop with a single store view.</comment>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Set to No on a store view to leave it out of every hreflang set (e.g. a B2B or test store view).</comment>
+                </field>
+                <field id="scope" translate="label" type="select" sortOrder="20" showInDefault="1">
+                    <label>Link store views of</label>
+                    <source_model>Softcode\Hreflang\Model\Config\Source\Scope</source_model>
+                    <comment>"All websites" for one website per country or domain.</comment>
+                </field>
+                <field id="format" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>hreflang format</label>
+                    <source_model>Softcode\Hreflang\Model\Config\Source\Format</source_model>
+                    <comment>Derived from the store view's locale (General > Locale Options). Use "Language only" when one store view serves a language in every country.</comment>
+                </field>
+                <field id="code" translate="label" type="text" sortOrder="40" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>hreflang value override</label>
+                    <comment>Optional, e.g. es-419 or en-GB when the locale doesn't match the audience.</comment>
+                </field>
+                <field id="x_default" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>x-default</label>
+                    <source_model>Softcode\Hreflang\Model\Config\Source\XDefault</source_model>
+                    <comment>The page shown to visitors whose language has no store view.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

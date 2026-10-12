@@ -16,7 +16,8 @@
         "magento/module-review": "*",
         "magento/module-robots": "*",
         "magento/module-sitemap": "*",
-        "magento/module-store": "*"
+        "magento/module-store": "*",
+        "magento/module-url-rewrite": "*"
     },
     "repositories": [
         {
@@ -32,7 +33,8 @@
             "Softcode\\Robots\\": "modules/Robots/",
             "Softcode\\StructuredData\\": "modules/StructuredData/",
             "Softcode\\Sitemap\\": "modules/Sitemap/",
-            "Softcode\\Meta\\": "modules/Meta/"
+            "Softcode\\Meta\\": "modules/Meta/",
+            "Softcode\\Hreflang\\": "modules/Hreflang/"
         }
     },
     "config": {
