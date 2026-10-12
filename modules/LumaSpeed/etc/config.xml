@@ -27,8 +27,12 @@
                      2. Layered navigation: the server renders every filter open and the accordion JS then collapses
                         them (a layout shift of several hundred px on desktop PLPs); keep them closed until JS opens one
                      3. Breadcrumb links (#006bb4) next to the current page (#707070) differ only by colour (1.12:1);
-                        an underline makes them recognisable as links (WCAG 1.4.1, Lighthouse link-in-text-block) -->
-                <extra_css>.swatch-attribute.size .swatch-option,.swatch-attribute.manufacturer .swatch-option{color:#666}#narrow-by-list .filter-options-item:not(.active)>.filter-options-content{display:none}.breadcrumbs a{text-decoration:underline}</extra_css>
+                        an underline makes them recognisable as links (WCAG 1.4.1, Lighthouse link-in-text-block)
+                     4. Checkout: Knockout builds the form in several passes (fields grow, blocks get pushed down:
+                        CLS 0.24 mobile / 0.39 desktop). Magento shows #checkout-loader until RequireJS has loaded
+                        everything; keep the rest of the checkout invisible until then (invisible elements don't count
+                        as shifts), and the footer below the fold. Browsers without :has() behave as before. -->
+                <extra_css>.swatch-attribute.size .swatch-option,.swatch-attribute.manufacturer .swatch-option{color:#666}#narrow-by-list .filter-options-item:not(.active)>.filter-options-content{display:none}.breadcrumbs a{text-decoration:underline}#checkout:has(>#checkout-loader)>:not(#checkout-loader){visibility:hidden}.checkout-index-index #maincontent{min-height:100vh}</extra_css>
             </css>
             <a11y>
                 <menu_aria>1</menu_aria>

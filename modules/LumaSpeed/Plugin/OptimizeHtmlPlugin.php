@@ -9,6 +9,7 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\View\Asset\Repository as AssetRepository;
 use Magento\Framework\View\Result\Page;
 use Softcode\LumaSpeed\Model\Config;
+use Softcode\LumaSpeed\Model\CspNonce;
 use Softcode\LumaSpeed\Model\HtmlOptimizer;
 use Softcode\LumaSpeed\Model\LocalAssets;
 use Softcode\LumaSpeed\Model\ResponsiveImages;
@@ -26,7 +27,8 @@ class OptimizeHtmlPlugin
         private readonly ResponsiveImages $responsiveImages,
         private readonly LocalAssets $localAssets,
         private readonly AssetRepository $assetRepository,
-        private readonly ScriptGateLoader $scriptGateLoader
+        private readonly ScriptGateLoader $scriptGateLoader,
+        private readonly CspNonce $cspNonce
     ) {
     }
 
@@ -86,6 +88,11 @@ class OptimizeHtmlPlugin
             }
             if ($this->config->useUsedCss()) {
                 $options['usedCss'] = $this->usedCss();
+            }
+            // Only uncached pages (checkout, cart, account) get a nonce: Magento enforces its CSP there, and a nonce
+            // stored in the full page cache would no longer match the policy of later responses.
+            if (!$subject->getLayout()->isCacheable()) {
+                $options['nonce'] = $this->cspNonce->get();
             }
             $gating = $this->config->scriptGating();
             if ($gating !== null) {

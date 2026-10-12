@@ -25,7 +25,16 @@ Local runs with PageSpeed's own settings (simulated Moto G Power / desktop), war
 
 | Page | SEO | Best practices | Accessibility | Performance desktop | Performance mobile |
 |---|---|---|---|---|---|
-| Home, PLP, PDP, CMS | 100 | 100 | 100 | 100 | ~80 (61-83, see below) |
+| Home, PLP, PDP, CMS | 100 | 100 | 100 | 100 | ~80 with ungated third-party scripts; 96-99 without (see below) |
+| Checkout | 66 (NOINDEX, intended) | 100 | 100 | 97 | 89 |
+| Cart | 66 (NOINDEX, intended) | 100 | 100 | 100 | 76 |
+
+Checkout before: performance 48-66 mobile / 75-78 desktop, CLS 0.235 / 0.408, best practices 92, accessibility 94-97.
+
+Checkout fixes:
+- **Layout shift**: Knockout builds the checkout in several passes (fields grow, blocks get pushed out of view). LumaSpeed keeps the checkout invisible while Magento's own `#checkout-loader` is present (CSS `:has()`, no JavaScript), so the finished form appears at once: CLS 0.235/0.408 -> 0.012/0.000. Verified by walking through the checkout to the payment step.
+- **CSP**: Magento enforces its Content Security Policy on checkout (nonces/hashes, no `unsafe-inline`). The module's inline scripts get Magento's CSP nonce on uncached pages, and deferred stylesheets no longer use `onload="..."` handlers (blocked there).
+- **ARIA**: the steps list loses its `role="presentation"` items, the order summary dialog gets the name of its title.
 
 Before the toolkit: SEO 92, best practices 92-96, accessibility 85-88, desktop 97-100.
 

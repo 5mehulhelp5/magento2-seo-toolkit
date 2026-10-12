@@ -11,7 +11,16 @@ import * as chromeLauncher from 'chrome-launcher';
 const [label = 'run', cache = 'cold'] = process.argv.slice(2);
 const BASE = (process.env.STORE_URL || 'https://magento-seo.test:8443').replace(/\/$/, ''), HOST = new URL(BASE).hostname;
 const RUNS = Number(process.env.RUNS || 3);
-const ALL = { home: '/', plp: '/women/tops-women/jackets-women.html', pdp: '/joust-duffle-bag.html', cms: '/about-us' };
+const ALL = { home: '/', plp: '/women/tops-women/jackets-women.html', pdp: '/joust-duffle-bag.html', cms: '/about-us',
+  cart: '/checkout/cart/', checkout: '/checkout/' };
+// cart and checkout need a guest session with a product in the cart (otherwise /checkout redirects to the cart)
+const needsCart = name => name === 'cart' || name === 'checkout';
+let cartCookie = null;
+const cookieFor = name => {
+  if (!needsCart(name)) return null;
+  cartCookie ??= execSync('node ../cart-session.mjs').toString().split('; ').filter(c => !c.startsWith('mage-messages=')).join('; ');
+  return cartCookie;
+};
 const pages = (process.env.PAGES ? process.env.PAGES.split(',') : Object.keys(ALL)).map(n => [n, ALL[n]]);
 fs.mkdirSync('reports', { recursive: true });
 
@@ -32,7 +41,9 @@ for (const [name, path] of pages) {
     for (let i = 0; i < RUNS; i++) {
       if (cache === 'cold') flush();
       else { await warm(path); await warm(path); }
-      const r = await lighthouse(BASE + path, { port: chrome.port, output: 'json', logLevel: 'error' },
+      const cookie = cookieFor(name);
+      const r = await lighthouse(BASE + path, { port: chrome.port, output: 'json', logLevel: 'error',
+        ...(cookie && { extraHeaders: { Cookie: cookie }, disableStorageReset: true }) },
         device === 'desktop' ? desktopConfig : undefined);
       const l = r.lhr, a = l.audits, c = l.categories;
       if (i === 0) fs.writeFileSync(`reports/${label}-${cache}-${name}-${device}.json`, r.report);

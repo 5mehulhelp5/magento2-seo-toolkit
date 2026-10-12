@@ -105,8 +105,24 @@ class HtmlOptimizerTest extends TestCase
         $link = '<link  rel="stylesheet" type="text/css"  media="all" href="/static/mage/calendar.css" />';
         $out = $this->optimizer->optimize($this->page('cms-page-view', '', $link), ['deferStylesheets' => ['mage/calendar.css']]);
 
-        $this->assertStringContainsString('media="print" onload="this.media=\'all\'"', $out);
+        $this->assertStringContainsString('media="print" data-softcode-media="all"', $out);
         $this->assertStringContainsString('<noscript>' . $link . '</noscript>', $out);
+        $this->assertStringNotContainsString('onload=', $out, 'no inline event handlers: an enforced CSP blocks them');
+        $this->assertStringContainsString('<script data-softcode-css>(function(){var l=document.querySelectorAll(\'link[data-softcode-media]\')', $out);
+    }
+
+    public function testInlineScriptsCarryTheCspNonceWhenGiven(): void
+    {
+        $link = '<link  rel="stylesheet" type="text/css"  media="all" href="/static/mage/calendar.css" />';
+        $head = $link . '<script src="https://www.googletagmanager.com/gtm.js"></script>';
+        $options = ['deferStylesheets' => ['mage/calendar'], 'gatedScripts' => ['consent' => ['googletagmanager'], 'interaction' => [], 'loader' => 'L();']];
+
+        $with = $this->optimizer->optimize($this->page('checkout-index-index', '', $head), $options + ['nonce' => 'abc123']);
+        $this->assertStringContainsString('<script nonce="abc123" data-softcode-css>', $with);
+        $this->assertStringContainsString('<script nonce="abc123" data-softcode-loader>L();</script>', $with);
+
+        $without = $this->optimizer->optimize($this->page('checkout-index-index', '', $head), $options);
+        $this->assertStringNotContainsString('nonce=', $without, 'cached pages get no nonce');
     }
 
     public function testDeferredStylesheetGetsItsOwnMediaQueryBack(): void
@@ -114,7 +130,7 @@ class HtmlOptimizerTest extends TestCase
         $link = '<link  rel="stylesheet" type="text/css"  media="screen and (min-width: 768px)" href="/static/css/styles-l.min.css" />';
         $out = $this->optimizer->optimize($this->page('cms-page-view', '', $link), ['deferStylesheets' => ['css/styles-l']]);
 
-        $this->assertStringContainsString('media="print" onload="this.media=\'screen and (min-width: 768px)\'"', $out);
+        $this->assertStringContainsString('media="print" data-softcode-media="screen and (min-width: 768px)"', $out);
     }
 
     public function testUsedCssIsInlinedBeforeTheFirstStylesheetWhichThenLoadsWithoutBlocking(): void
@@ -124,8 +140,8 @@ class HtmlOptimizerTest extends TestCase
         $usedCss = ['pageTypes' => ['catalog-category-view' => 'plp'], 'cssFor' => fn (string $t) => $t === 'plp' ? '.a{b:c}' : null, 'defer' => ['css/styles-']];
         $out = $this->optimizer->optimize($this->page('catalog-category-view', '', $head), ['usedCss' => $usedCss, 'prioritizeLcpImage' => false]);
 
-        $this->assertStringContainsString('<style data-softcode-used-css="plp">.a{b:c}</style><link media="print" onload="this.media=\'all\'"', $out);
-        $this->assertStringContainsString('onload="this.media=\'screen and (min-width: 768px)\'"', $out);
+        $this->assertStringContainsString('<style data-softcode-used-css="plp">.a{b:c}</style><link media="print" data-softcode-media="all"', $out);
+        $this->assertStringContainsString('data-softcode-media="screen and (min-width: 768px)"', $out);
 
         $other = $this->optimizer->optimize($this->page('cms-page-view', '', $head), ['usedCss' => $usedCss, 'prioritizeLcpImage' => false]);
         $this->assertStringNotContainsString('data-softcode-used-css', $other, 'page types without used CSS keep blocking stylesheets');

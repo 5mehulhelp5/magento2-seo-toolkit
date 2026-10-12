@@ -6,7 +6,8 @@ namespace Softcode\LumaSpeed\Model;
 /**
  * The inline loader for gated third-party scripts (see HtmlOptimizer::gateScripts). It turns
  * <script type="text/softcode-consent|interaction"> placeholders back into real scripts, in document order:
- *  - "interaction": on the visitor's first pointer, key, touch, scroll or mouse move;
+ *  - "interaction": on the visitor's first pointer, key, touch, wheel or mouse move. Not "scroll": pages scroll
+ *    themselves (Magento's checkout does), which would start the scripts without anyone interacting;
  *  - "consent": once the configured consent source reports consent for statistics/marketing.
  * Consent sources: generic (window event "softcode:consent-granted" or window.softcodeConsentGranted(), remembered
  * in localStorage), Magento's cookie restriction mode, Cookiebot, CookieYes, OneTrust. For the vendor sources the
@@ -26,10 +27,10 @@ function patch(){if(patched)return;patched=1;late(w,'load',function(){return d.r
 function run(when){if(done[when])return;done[when]=1;ready(function(){patch();var l=d.querySelectorAll('script[type="text/softcode-'+when+'"]');
 for(var i=0;i<l.length;i++){var o=l[i],s=d.createElement('script');for(var j=0;j<o.attributes.length;j++){var a=o.attributes[j];
 if(a.name!=='type'&&a.name!=='data-src'&&a.name!=='data-module')s.setAttribute(a.name,a.value);}
-if(o.getAttribute('data-module'))s.type='module';
+if(o.nonce)s.nonce=o.nonce;if(o.getAttribute('data-module'))s.type='module';
 if(o.getAttribute('data-src')){s.src=o.getAttribute('data-src');if(!o.hasAttribute('async'))s.async=false;}else{s.text=o.text;}
 o.parentNode.replaceChild(s,o);}});}
-var ev=['pointerdown','keydown','touchstart','scroll','mousemove'];
+var ev=['pointerdown','keydown','touchstart','touchmove','wheel','mousemove'];
 function interact(){for(var i=0;i<ev.length;i++)w.removeEventListener(ev[i],interact,{passive:true});run('interaction');}
 for(var i=0;i<ev.length;i++)w.addEventListener(ev[i],interact,{passive:true});
 function consent(){run('consent');}

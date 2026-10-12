@@ -12,6 +12,14 @@ class HtmlOptimizer
 {
     private const LISTING_PAGES = ['catalog-category-view', 'catalogsearch-result-index'];
     private const CONTENT_PAGES = ['cms-index-index', 'cms-page-view'];
+    /** Applies the real media query of each deferred stylesheet once it has loaded (see deferStylesheet). */
+    private const STYLESHEET_ACTIVATOR = '(function(){var l=document.querySelectorAll(\'link[data-softcode-media]\');'
+        . 'for(var i=0;i<l.length;i++)(function(k){var m=k.getAttribute(\'data-softcode-media\');function on(){k.media=m;}'
+        . 'if(k.sheet)on();else k.addEventListener(\'load\',on);})(l[i]);})();';
+
+    /** CSP nonce for inline scripts of the response being optimised (only on uncached pages). */
+    private ?string $nonce = null;
+    private bool $needsActivator = false;
 
     /**
      * @param array{
@@ -41,6 +49,8 @@ class HtmlOptimizer
         if (stripos($html, '<head') === false || stripos($html, '<body') === false) {
             return $html;
         }
+        $this->nonce = isset($options['nonce']) && $options['nonce'] !== '' ? (string)$options['nonce'] : null;
+        $this->needsActivator = false;
         $bodyClasses = $this->bodyClasses($html);
         $preloadUrl = $preloadSrcset = null;
 
@@ -87,6 +97,9 @@ class HtmlOptimizer
         }
         if (trim((string)($options['extraCss'] ?? '')) !== '') {
             $html = $this->insertBeforeHeadEnd($html, '<style data-softcode-lumaspeed>' . $this->safeCss($options['extraCss']) . '</style>');
+        }
+        if ($this->needsActivator) {
+            $html = $this->insertBeforeHeadEnd($html, $this->scriptTag(self::STYLESHEET_ACTIVATOR, ' data-softcode-css'));
         }
         return $html;
     }
@@ -157,7 +170,7 @@ class HtmlOptimizer
                 $href = html_entity_decode((string)$this->attr($tag, 'href'));
                 $media = $this->attr($tag, 'media');
                 if ($href === '' || $media === 'print') {
-                    return $tag;   // print-only and deferred (media="print" onload) stylesheets don't block render
+                    return $tag;   // print-only and deferred (media="print") stylesheets don't block render
                 }
                 foreach ($patterns as $pattern) {
                     if ($pattern !== '' && str_contains($href, $pattern)) {
@@ -201,7 +214,7 @@ class HtmlOptimizer
         $json = str_replace('</', '<\/', (string)json_encode(['bundles' => $config], JSON_UNESCAPED_SLASHES));
         return (string)preg_replace_callback(
             '#<script\b[^>]*\bsrc="[^"]*/requirejs/require(?:\.min)?\.js"[^>]*>\s*</script>#i',
-            fn (array $m) => $m[0] . "\n<script>require.config(" . $json . ');</script>',
+            fn (array $m) => $m[0] . "\n" . $this->scriptTag('require.config(' . $json . ');'),
             $html,
             1
         );
@@ -245,7 +258,7 @@ class HtmlOptimizer
             },
             $html
         );
-        return $changed ? $this->insertBeforeHeadEnd($html, '<script data-softcode-loader>' . $gated['loader'] . '</script>') : $html;
+        return $changed ? $this->insertBeforeHeadEnd($html, $this->scriptTag($gated['loader'], ' data-softcode-loader')) : $html;
     }
 
     /** CSS can't contain "</style" inside a <style> element; it only appears in comments or strings, so escape it. */
@@ -391,7 +404,11 @@ class HtmlOptimizer
         return preg_replace('/<head\b[^>]*>/i', '$0' . "\n" . $link, $html, 1);
     }
 
-    /** Loads a stylesheet without blocking first render; keeps a <noscript> fallback. */
+    /**
+     * Loads a stylesheet without blocking first render; keeps a <noscript> fallback. The switch back to its real
+     * media query is done by one small script (see STYLESHEET_ACTIVATOR), not by onload="..." attributes:
+     * Magento's enforced checkout CSP blocks inline event handlers, which would leave the stylesheet unapplied.
+     */
     private function deferStylesheet(string $html, string $needle): string
     {
         return preg_replace_callback(
@@ -404,13 +421,20 @@ class HtmlOptimizer
                 }
                 // restore the stylesheet's own media query once loaded: styles-l is "screen and (min-width: 768px)",
                 // switching it to "all" would apply desktop layout on phones
-                $restore = htmlspecialchars(addslashes(html_entity_decode($media)), ENT_QUOTES);
                 $deferred = $this->removeAttr($this->removeAttr($tag, 'media'), 'onload');
-                $deferred = substr($deferred, 0, 5) . ' media="print" onload="this.media=\'' . $restore . '\'"' . substr($deferred, 5);
+                $deferred = substr($deferred, 0, 5) . sprintf(' media="print" data-softcode-media="%s"', $media) . substr($deferred, 5);
+                $this->needsActivator = true;
                 return $deferred . '<noscript>' . $tag . '</noscript>';
             },
             $html
         );
+    }
+
+    /** Inline script with this response's CSP nonce, when there is one. */
+    private function scriptTag(string $code, string $attributes = ''): string
+    {
+        $nonce = $this->nonce !== null ? sprintf(' nonce="%s"', htmlspecialchars($this->nonce, ENT_QUOTES)) : '';
+        return '<script' . $nonce . $attributes . '>' . $code . '</script>';
     }
 
     /**
