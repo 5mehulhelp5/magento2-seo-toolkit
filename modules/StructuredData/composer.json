@@ -1,6 +1,7 @@
 {
     "name": "softcode/module-structured-data",
     "description": "JSON-LD for vanilla Magento: Product, BreadcrumbList, Organization, WebSite search box; replaces Luma's product microdata.",
+    "version": "0.1.0",
     "type": "magento2-module",
     "license": "MIT",
     "require": {

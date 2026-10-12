@@ -1,6 +1,7 @@
 {
     "name": "softcode/module-sitemap",
     "description": "Switches on Magento's own XML sitemap: one per store view, daily generation, Sitemap line in robots.txt.",
+    "version": "0.1.0",
     "type": "magento2-module",
     "license": "MIT",
     "require": {

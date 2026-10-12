@@ -1,6 +1,7 @@
 {
     "name": "softcode/module-robots",
     "description": "Meta robots per page type for vanilla Magento (noindex filters, sorting, search, cart, checkout, account) and a default robots.txt.",
+    "version": "0.2.0",
     "type": "magento2-module",
     "license": "MIT",
     "require": {

@@ -1,6 +1,7 @@
 {
     "name": "softcode/module-hreflang",
     "description": "hreflang alternates for multi-language Magento stores: products, categories, CMS pages and the homepage, per store view, with x-default.",
+    "version": "0.1.0",
     "type": "magento2-module",
     "license": "MIT",
     "require": {
@@ -13,6 +14,6 @@
     },
     "autoload": {
         "files": ["registration.php"],
-        "psr-4": { "Softcode\Hreflang\\": "" }
+        "psr-4": { "Softcode\\Hreflang\\": "" }
     }
 }

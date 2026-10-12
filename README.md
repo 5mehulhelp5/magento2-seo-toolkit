@@ -12,7 +12,7 @@ Every fix is measured: a before/after run on a real vanilla store, not a claim.
 
 | Module | What it fixes | Status |
 |---|---|---|
-| `Softcode_LumaSpeed` | LCP image is fetched late (lazy-loaded first listing row, low-priority PDP photo, unprioritised CMS hero); full-size CMS images on phones; images without width/height; `calendar.css` blocks render on every page; 5 font preloads compete with the LCP image; layered navigation jumps on load (CLS); menu and tab ARIA roles; low-contrast swatches and colour-only breadcrumb links. Optional: per-page-type "used CSS" | 0.3, measured |
+| `Softcode_LumaSpeed` | LCP image is fetched late (lazy-loaded first listing row, low-priority PDP photo, unprioritised CMS hero); full-size CMS images on phones; images without width/height; `calendar.css` blocks render on every page; 5 font preloads compete with the LCP image; layered navigation jumps on load (CLS); menu and tab ARIA roles; low-contrast swatches and colour-only breadcrumb links. Third-party scripts after consent or on first interaction; checkout CSP, layout shift and ARIA. Optional: per-page-type "used CSS" | 0.5, measured |
 | `Softcode_Canonical` | no canonical tags at all by default; no canonical on home/CMS even when enabled; page 2+ canonicalised to page 1; category-path product URLs serve duplicates with a 200 | 0.1, verified |
 | `Softcode_Robots` | one global `INDEX,FOLLOW` on every page incl. filters, sorting, search, cart, checkout, account, 404; empty `robots.txt`; no `/llms.txt` | 0.2, verified |
 | `Softcode_StructuredData` | no JSON-LD anywhere; PDP has Luma microdata only; no breadcrumbs, organization or site search markup | 0.1, verified |
@@ -196,6 +196,10 @@ STORE_URL=https://your-store.example node usedcss-build.mjs   # writes usedcss/*
 ```
 
 Rebuild and copy again after every `setup:static-content:deploy` (which empties `pub/static`). Without the files the setting changes nothing. Check the result visually: `benchmarks/lh13/screens.mjs` with `BLOCK_FULL_CSS=1` shows the first render with only the used CSS.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
 
 ## Tests
 

@@ -1,6 +1,7 @@
 {
     "name": "softcode/module-meta",
     "description": "Meta description fallback for vanilla Magento: category description or template, CMS page text, title template.",
+    "version": "0.1.0",
     "type": "magento2-module",
     "license": "MIT",
     "require": {

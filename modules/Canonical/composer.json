@@ -1,6 +1,7 @@
 {
     "name": "softcode/module-canonical",
     "description": "Canonical URLs for vanilla Magento: catalog canonicals on, homepage/CMS canonicals, self-canonical pagination, 301 for category-path product URLs.",
+    "version": "0.1.0",
     "type": "magento2-module",
     "license": "MIT",
     "require": {

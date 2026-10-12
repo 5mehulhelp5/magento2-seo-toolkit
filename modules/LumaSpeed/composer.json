@@ -1,6 +1,7 @@
 {
     "name": "softcode/module-luma-speed",
     "description": "Faster Luma without replacing it: LCP image priority, non-blocking CSS, trimmed font preloads.",
+    "version": "0.5.0",
     "type": "magento2-module",
     "license": "MIT",
     "require": {

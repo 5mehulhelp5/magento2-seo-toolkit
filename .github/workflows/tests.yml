@@ -24,6 +24,12 @@ jobs:
         shell: bash  # -eo pipefail: a failing php -l fails the step; the grep only hides the "no errors" lines
         run: find modules -name '*.php' -print0 | xargs -0 -n1 php -l | { grep -v '^No syntax errors' || true; }
 
+      - name: Validate module composer.json and XML
+        shell: bash
+        run: |
+          for f in modules/*/composer.json; do composer validate --no-check-publish --no-check-lock "$f"; done
+          find modules -name '*.xml' -print0 | xargs -0 -n1 php -r 'libxml_use_internal_errors(true); if (!simplexml_load_file($argv[1])) { fwrite(STDERR, "invalid XML: $argv[1]\n"); exit(1); }'
+
       - name: Cache Composer downloads
         uses: actions/cache@v4
         with:
