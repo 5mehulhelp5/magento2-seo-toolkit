@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded',function(){
   var b=document.createElement('div');
   b.id='demo-consent';
   b.style.cssText='position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#fff;box-shadow:0 -2px 12px rgba(0,0,0,.2);padding:20px;font:15px/1.5 sans-serif';
-  b.innerHTML='<p style="margin:0 0 12px">We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. We also share information about your use of our site with our social media, advertising and analytics partners.</p><button onclick="this.parentNode.remove()">Accept all</button> <button onclick="this.parentNode.remove()">Necessary only</button>';
+  b.innerHTML='<p style="margin:0 0 12px">We use cookies to personalise content and ads, to provide social media features and to analyse our traffic. We also share information about your use of our site with our social media, advertising and analytics partners.</p><button onclick="this.parentNode.remove();window.softcodeConsentGranted&&window.softcodeConsentGranted()">Accept all</button> <button onclick="this.parentNode.remove()">Necessary only</button>';
   document.body.appendChild(b);
 });`);
 

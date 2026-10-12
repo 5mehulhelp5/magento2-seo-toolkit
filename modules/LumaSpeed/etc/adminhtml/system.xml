@@ -83,6 +83,23 @@
                     <comment>Loads Luma's modules from a few per-page-type bundles instead of 200+ separate files. Needs bundles built for the deployed theme (bundle/manifest.json in its static folder); rebuild after every static content deploy. Without them nothing changes.</comment>
                 </field>
             </group>
+            <group id="third_party" translate="label" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Third-party scripts</label>
+                <comment>Measured on Luma, third-party scripts (tag manager, analytics, consent, chat) caused most of the mobile total blocking time. Scripts whose src, or whose inline code, contains one of these fragments stay inert until allowed; Magento's own scripts are never touched. One fragment per line, e.g. googletagmanager.com, connect.facebook.net, widget.intercom.io.</comment>
+                <field id="after_consent" translate="label" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Load only after consent</label>
+                    <comment>Tracking and marketing scripts. Under GDPR these may not run before consent anyway.</comment>
+                </field>
+                <field id="on_interaction" translate="label" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Load on first interaction</label>
+                    <comment>Widgets not needed before the visitor scrolls, taps, types or moves the mouse (chat, reviews, social embeds).</comment>
+                </field>
+                <field id="consent_source" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Consent comes from</label>
+                    <source_model>Softcode\LumaSpeed\Model\Config\Source\ConsentSource</source_model>
+                    <comment>Generic: your consent banner calls window.softcodeConsentGranted() (or dispatches the window event softcode:consent-granted) when the visitor accepts; it is remembered for later pages.</comment>
+                </field>
+            </group>
             <group id="a11y" translate="label" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Accessibility</label>
                 <field id="menu_aria" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">

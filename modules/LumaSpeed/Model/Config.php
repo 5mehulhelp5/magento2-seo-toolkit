@@ -38,6 +38,20 @@ class Config
         ];
     }
 
+    /**
+     * Script gating lists, or null when both are empty.
+     * @return array{consent: string[], interaction: string[], source: string}|null
+     */
+    public function scriptGating(): ?array
+    {
+        $consent = $this->lines('third_party/after_consent');
+        $interaction = $this->lines('third_party/on_interaction');
+        if (!$consent && !$interaction) {
+            return null;
+        }
+        return ['consent' => $consent, 'interaction' => $interaction, 'source' => $this->value('third_party/consent_source') ?: 'generic'];
+    }
+
     public function useUsedCss(): bool
     {
         return $this->flag('css/used_css');

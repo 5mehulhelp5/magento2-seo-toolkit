@@ -37,6 +37,12 @@
                 <!-- needs bundles built for the deployed theme (see README); without them this changes nothing -->
                 <bundles>0</bundles>
             </js>
+            <third_party>
+                <!-- empty by default: which scripts are third-party trackers is each shop's own list -->
+                <after_consent></after_consent>
+                <on_interaction></on_interaction>
+                <consent_source>generic</consent_source>
+            </third_party>
             <fonts>
                 <trim_preloads>1</trim_preloads>
                 <keep_preloads>opensans-400.woff2

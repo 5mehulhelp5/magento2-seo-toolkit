@@ -209,6 +209,25 @@ class HtmlOptimizerTest extends TestCase
         $this->assertStringContainsString('require.min.js"></script>' . "\n" . $config . '<script  type="text/javascript"  src="https://shop.test/static/v1/requirejs-config.min.js">', $out);
     }
 
+    public function testThirdPartyScriptsAreGatedAndMagentoScriptsUntouched(): void
+    {
+        $head = '<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-X"></script>'
+            . '<script>window.addEventListener("load",function(){var s=document.createElement("script");s.src="https://widget.chat.test/chat.js";document.body.appendChild(s);});</script>'
+            . '<script type="text/x-magento-init">{"*":{"chat.js":{}}}</script>'
+            . '<script src="https://shop.test/static/requirejs/require.min.js"></script>';
+        $gated = ['consent' => ['googletagmanager.com'], 'interaction' => ['chat.js'], 'loader' => 'LOADER();'];
+        $out = $this->optimizer->optimize($this->page('cms-page-view', '', $head), ['gatedScripts' => $gated, 'prioritizeLcpImage' => false]);
+
+        $this->assertStringContainsString('<script type="text/softcode-consent" data-src="https://www.googletagmanager.com/gtm.js?id=GTM-X" async></script>', $out);
+        $this->assertStringContainsString('<script type="text/softcode-interaction">window.addEventListener("load"', $out);
+        $this->assertStringContainsString('<script type="text/x-magento-init">{"*":{"chat.js":{}}}</script>', $out, 'data scripts are never gated');
+        $this->assertStringContainsString('<script src="https://shop.test/static/requirejs/require.min.js"></script>', $out);
+        $this->assertStringContainsString('<script data-softcode-loader>LOADER();</script>' . "\n</head>", $out);
+
+        $none = $this->optimizer->optimize($this->page('cms-page-view', '', '<script src="/x.js"></script>'), ['gatedScripts' => $gated, 'prioritizeLcpImage' => false]);
+        $this->assertStringNotContainsString('data-softcode-loader', $none, 'no loader when nothing was gated');
+    }
+
     public function testNonHtmlResponsesAreUntouched(): void
     {
         $json = '{"img":"<img src=\"/x.jpg\">"}';

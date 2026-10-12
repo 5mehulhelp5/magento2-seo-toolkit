@@ -139,6 +139,19 @@ bin/magento cache:flush
 
 Settings live under **Stores > Configuration > Softcode**.
 
+### Third-party scripts: load after consent or on first interaction
+
+Measured on Luma with the toolkit active: with typical third-party scripts (tag manager + analytics, consent banner, chat widget) mobile performance was ~80; without them 96-99. Luma's own ~200 modules run as many short tasks and barely count toward total blocking time; the third-party scripts run as a few long ones.
+
+**Stores > Configuration > Softcode > Luma Speed > Third-party scripts** takes two lists of URL fragments. A `<script>` whose `src`, or whose inline code, contains one of them stays inert until allowed:
+
+- **Load only after consent:** tracking and marketing (e.g. `googletagmanager.com`, `connect.facebook.net`). Under GDPR these may not run before consent anyway.
+- **Load on first interaction:** widgets nobody needs before scrolling, tapping, typing or moving the mouse (chat, reviews).
+
+Consent comes from one of: a generic hook (your banner calls `window.softcodeConsentGranted()` or dispatches the window event `softcode:consent-granted`; remembered in `localStorage`), Magento's cookie restriction mode, Cookiebot, CookieYes or OneTrust (their own stored choice decides, so a withdrawn consent is respected). The consent banner itself must not be on either list.
+
+Started scripts keep their document order and attributes. Snippets that wait for `window` `load` (most embed codes) still run: once gated scripts start, late `load`/`DOMContentLoaded` listeners fire immediately. Magento's own scripts and `x-magento-init` data are never touched, so menu, minicart and add-to-cart work from the first second. Both lists are empty by default.
+
 ### Optional: used CSS per page type
 
 Needs Node 22+ and Chrome on a machine that can reach the store:

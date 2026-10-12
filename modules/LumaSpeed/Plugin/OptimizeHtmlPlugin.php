@@ -12,6 +12,7 @@ use Softcode\LumaSpeed\Model\Config;
 use Softcode\LumaSpeed\Model\HtmlOptimizer;
 use Softcode\LumaSpeed\Model\LocalAssets;
 use Softcode\LumaSpeed\Model\ResponsiveImages;
+use Softcode\LumaSpeed\Model\ScriptGateLoader;
 
 /**
  * Runs before Magento's full-page-cache plugin stores the page (see etc/frontend/di.xml),
@@ -24,7 +25,8 @@ class OptimizeHtmlPlugin
         private readonly HtmlOptimizer $optimizer,
         private readonly ResponsiveImages $responsiveImages,
         private readonly LocalAssets $localAssets,
-        private readonly AssetRepository $assetRepository
+        private readonly AssetRepository $assetRepository,
+        private readonly ScriptGateLoader $scriptGateLoader
     ) {
     }
 
@@ -84,6 +86,14 @@ class OptimizeHtmlPlugin
             }
             if ($this->config->useUsedCss()) {
                 $options['usedCss'] = $this->usedCss();
+            }
+            $gating = $this->config->scriptGating();
+            if ($gating !== null) {
+                $options['gatedScripts'] = [
+                    'consent' => $gating['consent'],
+                    'interaction' => $gating['interaction'],
+                    'loader' => $this->scriptGateLoader->build($gating['source']),
+                ];
             }
             $response->setBody($this->optimizer->optimize($body, $options));
         }

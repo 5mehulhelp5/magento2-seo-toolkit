@@ -29,8 +29,10 @@ class HtmlOptimizer
      *     cssFor?: callable(string): ?string,
      *     extraCss?: string,
      *     requireBundles?: array{prefix: string, pageTypes: array<string, string>, bundles: array<string, string[]>}|null,
-     *     usedCss?: array{pageTypes: array<string, string>, cssFor: callable(string): ?string, defer: string[]}|null
-     * } $options  usedCss: per page type, inline the CSS that type uses and load the full stylesheets without blocking  responsiveContentImages maps an image URL to its srcset and original width (or null to leave it alone);
+     *     usedCss?: array{pageTypes: array<string, string>, cssFor: callable(string): ?string, defer: string[]}|null,
+     *     gatedScripts?: array{consent: string[], interaction: string[], loader: string}|null
+     * } $options  gatedScripts: third-party scripts (src or inline code containing a fragment) wait for consent or
+     *             the first interaction; loader is the inline JS that starts them  usedCss: per page type, inline the CSS that type uses and load the full stylesheets without blocking  responsiveContentImages maps an image URL to its srcset and original width (or null to leave it alone);
      *             dimensionsFor maps an image URL to its natural [width, height]; cssFor returns a stylesheet's contents
      *             with relative url()s already made absolute
      */
@@ -76,6 +78,9 @@ class HtmlOptimizer
         }
         if (!empty($options['inlineStylesheets']) && isset($options['cssFor'])) {
             $html = $this->inlineStylesheets($html, $options['inlineStylesheets'], $options['cssFor']);
+        }
+        if (!empty($options['gatedScripts'])) {
+            $html = $this->gateScripts($html, $options['gatedScripts']);
         }
         if (!empty($options['requireBundles'])) {
             $html = $this->addRequireBundles($html, $options['requireBundles'], $bodyClasses);
@@ -200,6 +205,47 @@ class HtmlOptimizer
             $html,
             1
         );
+    }
+
+    /**
+     * Third-party scripts (tag managers, analytics, chat widgets) run as a few long tasks during page load; measured
+     * on Luma they were most of the mobile total blocking time. Tracking scripts may not run before consent anyway
+     * (GDPR), and widgets like chat aren't needed before the visitor does anything. Matching scripts become inert
+     * (type="text/softcode-<when>") and the loader starts them in their original order once allowed.
+     * Magento's own scripts and data scripts (x-magento-init, JSON) are never touched.
+     * @param array{consent: string[], interaction: string[], loader: string} $gated
+     */
+    private function gateScripts(string $html, array $gated): string
+    {
+        $changed = false;
+        $html = preg_replace_callback(
+            '#<script\b([^>]*)>(.*?)</script>#is',
+            function (array $m) use ($gated, &$changed): string {
+                $attrs = $m[1];
+                $type = strtolower((string)$this->attr('<script' . $attrs . '>', 'type'));
+                if ($type !== '' && $type !== 'text/javascript' && $type !== 'module') {
+                    return $m[0];   // x-magento-init, JSON, templates, already gated
+                }
+                $src = (string)$this->attr('<script' . $attrs . '>', 'src');
+                $haystack = $src !== '' ? $src : $m[2];
+                foreach (['consent', 'interaction'] as $when) {
+                    foreach ($gated[$when] as $needle) {
+                        if ($needle !== '' && str_contains($haystack, $needle)) {
+                            $changed = true;
+                            $attrs = preg_replace('/\s(type|src)="[^"]*"/i', '', $attrs);
+                            $data = $src !== '' ? sprintf(' data-src="%s"', $src) : '';
+                            if ($type === 'module') {
+                                $data .= ' data-module="1"';
+                            }
+                            return sprintf('<script type="text/softcode-%s"%s%s>%s</script>', $when, $data, $attrs, $m[2]);
+                        }
+                    }
+                }
+                return $m[0];
+            },
+            $html
+        );
+        return $changed ? $this->insertBeforeHeadEnd($html, '<script data-softcode-loader>' . $gated['loader'] . '</script>') : $html;
     }
 
     /** CSS can't contain "</style" inside a <style> element; it only appears in comments or strings, so escape it. */
